@@ -1,6 +1,14 @@
 html,
-body {
-  height: 100%;
+body,
+footer {
+  height: 90%;
+  color: rgba(255,255,255,1);
+  background: #07131F;
+}
+
+.header-title {
+  font-family: 'Lobster Two', cursive;
+  color: #999079;
 }
 
 #map {
