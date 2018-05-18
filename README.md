@@ -20,4 +20,5 @@ br3ndonland
 ## Stack
 
 - [Google Maps Platform](https://cloud.google.com/maps-platform/)
+- [Foursquare](https://developer.foursquare.com/)
 - [KnockoutJS](http://knockoutjs.com)
