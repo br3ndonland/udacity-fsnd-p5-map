@@ -4,19 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Boston's Best Beans by br3ndonland</title>
-  <link href="https://fonts.googleapis.com/css?family=Lobster+Two" rel="stylesheet">
+  <title data-bind="text: appTitle"></title>
+  <link href="https://fonts.googleapis.com/css?family=Lobster%7CRaleway" rel="stylesheet">
   <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-  <header>
-    <h1 class="header-title">Boston's best beans</h1>
-  </header>
-  <div id="map"></div>
-  <script src="static/js/index.js"></script>
-  <script src="static/js/knockout-3.4.2.js"></script>
+  <aside id="sidenav" class="sidenav">
+    <header>
+      <article>TODO list description</article>
+      <input type="text">
+      <!-- TODO: open now -->
+    </header>
+    <ul>
+    <!-- <ul data-bind="foreach: locations"> -->
+      <li><a href="#">Use Knockout to create list</a></li>
+    </ul>
+  </aside>
+  <main id="main">
+    <header class="header-title">
+      <h1>
+        <span class="toggle" data-bind="click: toggleSidenav">&#9776;</span>
+        <span data-bind="text: appTitle"></span>
+      </h1>
+    </header>
+    <div id="map">TODO: figure out how to make map independent of other divs around it</div>
+  </main>
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=initMap">
   </script>
+  <!-- <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous">
+  </script> -->
+  <!-- <script src="static/js/maps.js"></script> -->
+  <script src="static/js/knockout-3.4.2.js"></script>
+  <script src="static/js/index.js"></script>
 </body>
 </html>

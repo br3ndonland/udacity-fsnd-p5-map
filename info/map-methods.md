@@ -84,9 +84,6 @@ Knockout is similar to jQuery, but has more app controller functionality. Knocko
 
 - This is a simple one-page web app. Based on the mockup in the project description, I should have a header bar at the top, and a sliding drawer menu on the side.
 - The header was simple: just add HTML `<header>` tags before the `<div id="map"></div>`
-- I used an `<aside>` element for the side navigation menu.
-  - Side navigation menus are also called "sidenav" or "off-canvas menus."
-  - I followed the [sidenav tutorial from w3schools](https://www.w3schools.com/howto/howto_js_sidenav.asp), modifying the JavaScript to handle click events with Knockout. The JavaScript basically changes the page margins when the hamburger icon is clicked.
 
 [(Back to TOC)](#table-of-contents)
 
@@ -107,6 +104,11 @@ I completed the [Udacity Google Maps APIs course](https://www.udacity.com/course
   - I attempted to change `var map` to `const map`, but wasn't able to get it to work.
   - I was thinking about using the drawing tools to draw a border around Back Bay, but I expanded my list of coffee shops to the greater Boston area, so I didn't need the Back Bay border.
 - I added a simple drop animation for the marker using the [marker instructions in the Google Maps API docs](https://developers.google.com/maps/documentation/javascript/markers).
+- Here's what the app looks like so far:
+
+  ![Early screen shot of map](img/Screen-shot-2018-05-09-at-3.14.36-PM.png)
+
+- Git commit at this point: Style page and map c95c601
 
 ### Location list fail
 
@@ -133,7 +135,7 @@ I should be able to query the [Places library](https://developers.google.com/map
 
 I spent basically two days of my life trying to hack out some JSON. I tried modifying the [full URL](https://www.google.com/maps/@42.357817,-71.1045126,13z/data=!3m1!4b1!4m3!11m2!2s1FhPRrcoV52Jiqi8htc75zZ5IELc!3e3) in the style of [Place details requests](https://developers.google.com/maps/documentation/javascript/places#place_details), to no avail. I tried to interrogate the page data with developer tools also.
 
-![Interrogating the place list with developer tools](img/Screen-shot-2018-05-12-at-11.57.55-AM.png)
+![Interrogating the Google Maps place list with developer tools](img/Screen-shot-2018-05-12-at-11.57.55-AM.png)
 
 I looked for a more developer-friendly API. I checked out [Factual](https://www.factual.com/) and [Yelp](https://www.yelp.com/developers), but decided on [Foursquare](https://developer.foursquare.com/).
 
@@ -310,6 +312,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     ```
   - The iterator `i` can be used instead of `item`.
   - The JavaScript is actually a server-side Node.js module. I will convert the server-side code to run client-side in the browser.
+  - Git commit at this point: Query Foursquare API with Python and JavaScript 2ba7a8d
 
 [(Back to TOC)](#table-of-contents)
 
@@ -319,13 +322,131 @@ Now that I have my API endpoints established, I need to structure the app with K
 
 ### Model
 
+*TODO* model properties as [observables](http://knockoutjs.com/documentation/observables.html)
+
 *TODO* make JSON array an [observable array](http://knockoutjs.com/documentation/observableArrays.html)?
 
 *TODO* access foursquare data with ajax call?
 
 ### View Model
 
+#### Starting off with app title
+
+- I tried to build Knockout in around my Google Maps code, but it wasn't working. I started from scratch and began by adding the Knockout code structure.
+- Neither the documentation nor the Udacity lessons gave me a clear idea of how to structure the app.
+  - Why is `viewModel` a variable, and not a function?
+  - What should be included in `viewModel`, and what should be separate?
+- Let's start with the app title. I declared the title as a simple Knockout variable, and then set a binding in the HTML.
+  - *index.js*
+
+    ```js
+    // ViewModel (Knockout controller)
+
+    const viewModel = {
+      appTitle: "Boston's Best Beans"
+    }
+
+    ko.applyBindings(viewModel)
+    ```
+
+  - *index.html*
+
+    ```html
+    <!-- head and start of body above -->
+    <header class="header-title">
+      <h1>
+        <span data-bind="text: appTitle"></span>
+      </h1>
+    </header>
+    <!-- body continues below -->
+    ```
+
+    ![Screen shot of Knockout title](img/Screen-shot-2018-05-18-at-3.00.25-PM.png)
+
+  - Success. The error in the browser console in the screenshot above is because of the Google Maps URL in *index.html*. Note that, after I build in the Foursquare API, I can pull the list title and change the title to a `ko.observable()`, so that it will update automatically when changed.
+
+#### Sidenav
+
+- I decided to build in the side navigation menu before incorporating Google Maps and Foursquare into the Knockout app.
+- I used the HTML unicode `&#9776;` for the hamburger icon in the header. Encoding the hamburger as a character instead of an icon or image allowed me to use the same style as the header title.
+- I used an `<aside>` element for the side navigation menu.
+- Side navigation menus are also called "sidenav" or "off-canvas menus."
+- I started with the [sidenav tutorial from w3schools](https://www.w3schools.com/howto/howto_js_sidenav.asp), modifying the JavaScript to handle click events with Knockout.
+- The sidenav tutorial uses separate buttons to open and close the sidenav. I wanted to use the hamburger icon for both opening and closing the sidenav. I therefore created a `toggleSidenav ()` function.
+- The JavaScript basically changes the page margins when the hamburger icon is clicked.
+- <details><summary>First attempt at sidenav in <em>index.js</em></summary>
+
+  ```js
+  const viewModel = {
+    appTitle: "Boston's Best Beans",
+    toggleSidenav: function () {
+      const sidenav = document.getElementById('sidenav')
+      const main = document.getElementById('main')
+      if (model.toggleSidenav === true) {
+        model.toggleSidenav = false
+        sidenav.style.width = '250px'
+        sidenav.style.marginLeft = '250px'
+      } else {
+        model.toggleSidenav = true
+        sidenav.style.width = '0px'
+        sidenav.style.marginLeft = '0px'
+      }
+    }
+  }
+  ```
+
+  </details>
+
+  ![Screen shot of first iteration of sidenav](img/Screen-shot-2018-05-19-at-6.56.32-PM.png)
+
+- Alright, that sorta worked. Now, I need to push the main page, not just drop content on top of it. I just had to change `sidenav.style.marginLeft` to `main.style.marginLeft`.
+- Toggle: I used CSS to convert the cursor to pointer when hovering over the hamburger toggle. At first, it took two clicks to get the sidenav to open. I just had to reverse the margin settings.
+  - Two clicks on the hamburger to open:
+
+    ```js
+    if (model.toggleSidenav === true) {
+      model.toggleSidenav = false
+      sidenav.style.width = '250px'
+      main.style.marginLeft = '250px'
+    } else {
+      model.toggleSidenav = true
+      sidenav.style.width = '0px'
+      main.style.marginLeft = '0px'
+    }
+    ```
+
+  - Corrected so one click on the hamburger opens sidenav:
+
+    ```js
+    if (model.toggleSidenav === true) {
+      model.toggleSidenav = false
+      sidenav.style.width = '0px'
+      main.style.marginLeft = '0px'
+    } else {
+      model.toggleSidenav = true
+      sidenav.style.width = '250px'
+      main.style.marginLeft = '250px'
+    }
+    ```
+
+    ![Screenshot of improved sidenav](img/Screen-shot-2018-05-20-at-12.58.44-PM.png)
+
+- Next, I worked on the CSS. I gave the sidenav the same background as the [Palenight Material Theme](https://github.com/equinusocio/vsc-material-theme/blob/master/src/themes/settings/specific/palenight.json), and set margins, padding and other properties.
+- Transition and animation
+  - I'm not totally happy with the transition. I would like the text in the sidenav to be static, and just have the main page pull back, instead of having the sidenav text roll in.
+  - I looked into CSS animations, rather than transitions.
+  - I read [Google's "Building performant expand & collapse animations" post](https://developers.google.com/web/updates/2017/03/performant-expand-and-collapse). I found out that Google does not recommend animating width and height because of slow performance.
+
+    >The immediate problem with this approach is that it requires animating width and height. These properties require calculating layout and paint the results on every frame of the animation, which can be very expensive, and will typically cause you to miss out on 60fps. If that’s news to you then read our [Rendering Performance](https://developers.google.com/web/fundamentals/performance/rendering/) guides, where you can get more information on how the rendering process works.
+
+  - Some of the [examples in the GoogleChromeLabs GitHub repo](https://github.com/GoogleChromeLabs/ui-element-samples) look useful.
+- Responsive design
+  - The sidenav push also doesn't look great on mobile devices, because it crunches the main page into a tiny space. It would be helpful to include some media queries to turn the sidenav into a topnav on mobile devices. I'm not sure how to coordinate the media queries with JavaScript right now, so I will save it for later.
+- I decided to just move on, and leave the animation and responsive design for later. It was taking too much time and it's not essential to the app.
+
 Google Maps can be used to handle click events, but this project requires that click events be handled by Knockout.
+
+*TODO* error handling: modify google maps link in html, add function to viewModel
 
 *TODO* use knockout to filter location list by open now
 
