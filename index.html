@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
+  <!-- Navigation menu -->
   <aside id="sidenav" class="sidenav">
     <header>
       <article>TODO list description</article>
@@ -20,6 +21,16 @@
       <li><a href="#">Use Knockout to create list</a></li>
     </ul>
   </aside>
+  <!-- Map style selector -->
+  <div id="style-selector-control"  class="map-control">
+    <select id="style-selector" class="selector-control">
+      <option value="silver" selected="selected">Silver</option>
+      <option value="night">Night</option>
+      <option value="retro">Retro</option>
+      <option value="default">Default</option>
+    </select>
+  </div>
+  <!-- Main page -->
   <main id="main">
     <header class="header-title">
       <h1>
@@ -27,7 +38,7 @@
         <span data-bind="text: appTitle"></span>
       </h1>
     </header>
-    <div id="map">TODO: figure out how to make map independent of other divs around it</div>
+    <div id="map"></div>
   </main>
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=initMap">
@@ -37,8 +48,7 @@
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous">
   </script> -->
-  <!-- <script src="static/js/maps.js"></script> -->
-  <script src="static/js/knockout-3.4.2.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
   <script src="static/js/index.js"></script>
 </body>
 </html>

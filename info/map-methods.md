@@ -24,8 +24,8 @@ br3ndonland
   - [Location list fail](#location-list-fail)
 - [Foursquare](#foursquare)
 - [Knockout](#knockout)
-  - [Model](#model)
   - [View Model](#view-model)
+  - [Model](#model)
 
 ## Prep
 
@@ -98,7 +98,7 @@ I completed the [Udacity Google Maps APIs course](https://www.udacity.com/course
 - [Set Map options](https://developers.google.com/maps/documentation/javascript/tutorial#MapOptions)
   - center
   - zoom
-  - style: I used the [Map Styler tool](https://mapstyle.withgoogle.com/) and the [styling instructions in the Google Maps JavaScript API docs](https://developers.google.com/maps/documentation/javascript/styling) to create an elegant silver map.
+  - style: I used the [Map Styler tool](https://mapstyle.withgoogle.com/) and the [styling instructions in the Google Maps JavaScript API docs](https://developers.google.com/maps/documentation/javascript/styling) to create an elegant silver map. It's also possible to [provide a menu with multiple style options](https://developers.google.com/maps/documentation/javascript/examples/style-selector).
   - I kept the JavaScript in *index.js*.
   - The map requires CSS with `height` attributes for `body` and `#map`.
   - I attempted to change `var map` to `const map`, but wasn't able to get it to work.
@@ -248,7 +248,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     }
     ```
 
-  - I couldn't use the same strategy to get the venue names. The code below just returns "undefined" 12 times.
+  - I couldn't use the same strategy to get the venue names. The code below just returns "undefined" 12 times, but again, at least the number is correct.
 
     ```js
     const items = data.response.list.listItems.items
@@ -319,14 +319,6 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 ## Knockout
 
 Now that I have my API endpoints established, I need to structure the app with Knockout. I had already completed the [JavaScript Design Patterns](https://www.udacity.com/course/javascript-design-patterns--ud989) course, and worked through the [KnockoutJS tutorials](http://learn.knockoutjs.com).
-
-### Model
-
-*TODO* model properties as [observables](http://knockoutjs.com/documentation/observables.html)
-
-*TODO* make JSON array an [observable array](http://knockoutjs.com/documentation/observableArrays.html)?
-
-*TODO* access foursquare data with ajax call?
 
 ### View Model
 
@@ -444,7 +436,36 @@ Now that I have my API endpoints established, I need to structure the app with K
   - The sidenav push also doesn't look great on mobile devices, because it crunches the main page into a tiny space. It would be helpful to include some media queries to turn the sidenav into a topnav on mobile devices. I'm not sure how to coordinate the media queries with JavaScript right now, so I will save it for later.
 - I decided to just move on, and leave the animation and responsive design for later. It was taking too much time and it's not essential to the app.
 
+#### Google Maps and Knockout
+
+- My first objective was to figure out how to **nest the `<div id="map">` within `<main>` in the HTML.**
+  - This is something that had been bugging me since I started using the Google Maps API. In yet another one of Google's oversights, the Google Maps JavaScript API docs don't explain how to nest the map div. I went back through the [overview](https://developers.google.com/maps/documentation/javascript/tutorial) and thought carefully about each step. The Map DOM Elements section says:
+
+    >Map DOM Elements
+    >
+    >```html
+    ><div id="map"></div>
+    >```
+    >
+    >For the map to display on a web page, we must reserve a spot for it. Commonly, we do this by creating a named div element and obtaining a reference to this element in the browser's document object model (DOM).
+    >
+    >In the example above, we used CSS to set the height of the map div to "100%". This will expand to fit the size on mobile devices. You may need to adjust the width and height values based on the browser's screensize and padding. Note that divs usually take their width from their containing element, and empty divs usually have 0 height. For this reason, you must always set a height on the `<div>` explicitly.
+
+  - Google clearly explains that `<div id="map"></div>` requires a CSS `height` style attribute. **Google doesn't explain that any `div` enclosing the map must also have its height set with CSS.** In the past, when I nested the map `div` within `main`, the map would disappear. When I set a height attribute for `main`, the map reappeared.
+- My next objective was to **integrate the map with Knockout.**
+  - I took the opportunity here to [provide a menu with multiple style options](https://developers.google.com/maps/documentation/javascript/examples/style-selector).
+  - I was having some difficulty getting the map to function properly when contained within the `const viewModel` object. In the browser console, the page was throwing the error `uncaught exception: InvalidValueError: initMap is not a function`. I think this was because the `&callback=initMap` in the Google Maps URL in *index.html* was no longer recognizing the JavaScript. I tried changing the callback to `&callback=viewModel.initMap`, but it was not successful.
+  - I decided to keep the Google Maps JavaScript outside of the Knockout objects.
+
 Google Maps can be used to handle click events, but this project requires that click events be handled by Knockout.
+
+### Model
+
+*TODO* model properties as [observables](http://knockoutjs.com/documentation/observables.html)
+
+*TODO* make JSON array an [observable array](http://knockoutjs.com/documentation/observableArrays.html)?
+
+*TODO* access foursquare data with ajax call?
 
 *TODO* error handling: modify google maps link in html, add function to viewModel
 

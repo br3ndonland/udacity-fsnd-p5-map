@@ -1,16 +1,82 @@
+/* General settings for page */
 html,
 body,
 footer {
   height: 90%;
-  color: rgba(255,255,255,1);
+  color: #999079;
   background: #07131F;
+  font-family: 'Raleway', sans-serif;
 }
 
+/* Header */
 .header-title {
-  font-family: 'Lobster Two', cursive;
+  font-family: 'Lobster', cursive;
   color: #999079;
 }
+.toggle {
+  cursor: pointer
+}
 
+/* Sidenav */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #292d3e;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s ease-in-out;
+}
+.sidenav header {
+  padding-left: 16px;
+}
+.sidenav ul {
+  padding-left: 16px;
+  list-style-type: none;
+  display: block;
+}
+.sidenav a {
+  padding-left: 16px;
+  text-decoration: none;
+  color: #999079;
+  display: block;
+}
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+    }
+  .sidenav a {
+    font-size: 18px;
+    }
+}
+
+/* Main page body */
+#main {
+  transition: 0.5s ease-in-out;
+  padding: 16px;
+  height: 100%;
+}
+
+/* Map */
 #map {
   height: 100%;
+}
+.map-control {
+  margin: 10px;
+  /* Hide the control initially, to prevent it from appearing before the map loads. */
+  display: none;
+}
+/* Display the control once it is inside the map. */
+#map .map-control { display: block; }
+.selector-control {
+  font-size: 14px;
+  line-height: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
