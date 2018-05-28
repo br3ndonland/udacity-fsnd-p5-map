@@ -20,12 +20,21 @@ br3ndonland
   - [Practice and coursework](#practice-and-coursework)
 - [Page layout](#page-layout)
 - [Google Maps](#google-maps)
-  - [Map](#map)
+  - [Map setup](#map-setup)
   - [Location list fail](#location-list-fail)
-- [Foursquare](#foursquare)
-- [Knockout](#knockout)
-  - [View Model](#view-model)
-  - [Model](#model)
+- [Knockout View Model](#knockout-view-model)
+  - [App title](#app-title)
+  - [Sidenav](#sidenav)
+  - [Google Maps with Knockout](#google-maps-with-knockout)
+- [Asynchronous HTTP requests](#asynchronous-http-requests)
+  - [Foursquare API queries](#foursquare-api-queries)
+  - [Ajax method selection](#ajax-method-selection)
+  - [Learning Fetch](#learning-fetch)
+  - [Async await](#async-await)
+  - [Foursquare with Fetch and async await](#foursquare-with-fetch-and-async-await)
+  - [Foursquare and Knockout](#foursquare-and-knockout)
+- [Build](#build)
+- [TODO](#todo)
 
 ## Prep
 
@@ -89,7 +98,7 @@ Knockout is similar to jQuery, but has more app controller functionality. Knocko
 
 ## Google Maps
 
-### Map
+### Map setup
 
 I completed the [Udacity Google Maps APIs course](https://www.udacity.com/course/google-maps-apis--ud864) and followed the steps in the [Google Maps JavaScript API documentation](https://developers.google.com/maps/documentation/javascript/tutorial) to create the map.
 
@@ -150,179 +159,11 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 [(Back to TOC)](#table-of-contents)
 
-## Foursquare
-
-- I already had a developer account set up from the [API lessons](https://github.com/br3ndonland/udacity-fsnd/blob/master/4-web-apps/apis/apis.md). I started by reviewing the notes and code from those lessons.
-- Creating my ["Boston's best beans" Foursquare list](https://foursquare.com/user/480979057/list/bostons-best-beans) and adding places to the list was quick and easy in the Android app. I also added photos and tips (short reviews).
-- You can query the API to [get details of a list](https://developer.foursquare.com/docs/api/lists/details)! What's up now, Google?
-- The list details query requires the `LIST_ID`. It's not necessarily present in the URL for the list itself. I found the `LIST_ID` (5af879722b9844322f1aba96) by using the [Foursquare API explorer](https://foursquare.com/developers/explore) to view my lists ([https://api.foursquare.com/v2/users/self/lists](https://api.foursquare.com/v2/users/self/lists)). The API explorer is a helpful tool that allows developers to browse and fold JSON.
-- Next, I worked on parsing the list JSON and getting terminal output with Python and JavaScript.
-  - It was, naturally, easier with Python. The `json.loads()` method adds the JSON to the Python program as a dictionary (array). It was easy to step through the nested levels of the JSON dictionary and pull out the data I wanted. Iterating over the venues with a `for` loop took more time to figure out, but still made sense.
-  - Python code in *foursquare-list.py*
-
-    ```python
-    import json
-    import requests
-
-    url = 'https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96'
-
-    params = dict(client_id='PASTE_CLIENT_ID_HERE',
-                  client_secret='PASTE_CLIENT_SECRET_HERE',
-                  v='20180323')
-    resp = requests.get(url=url, params=params)
-    data = json.loads(resp.text)
-
-    # If this file is called as a standalone program:
-    if __name__ == '__main__':
-        # Display output in terminal
-        print('\nResponse code: {}'.format(data['meta']['code']),
-              '\nList name: {}'.format(data['response']['list']['name']),
-              '\nList author: {} {}'.format(data['response']['list']['user']['firstName'],
-                                            data['response']['list']['user']['lastName']),
-              '\nList description: {}'.format(data['response']['list']['description']),
-              '\nVenues:')
-        # Iteration method to return info for each venue
-        # This method is syntactically similar to JavaScript
-        items = data['response']['list']['listItems']['items']
-        for item in items:
-            print('{}, {}, {}'.format(item['venue']['name'], item['venue']['location']['address'],
-                                      item['venue']['location']['city']))
-        # Alternative iteration method
-        for i in data['response']['list']['listItems']['items']:
-            print('{}, {}, {}'.format(i['venue']['name'], i['venue']['location']['address'],
-                                      i['venue']['location']['city']))
-
-    ```
-
-  - <details><summary>Terminal output from <em>foursquare-list.py</em></summary>
-
-    ```text
-    Response code: 200
-    List name: Boston's best beans
-    List author: Brendon Smith
-    List description: This is a personally curated list of the finest specialty coffee shops in Boston.
-    Venues:
-    Gracenote Coffee, 108 Lincoln St, Boston
-    Curio Coffee, 441 Cambridge St, Cambridge
-    Thinking Cup, 85 Newbury St, Boston
-    Blue Bottle Coffee, 40 Bow St, Cambridge
-    Thinking Cup, 165 Tremont St, Boston
-    George Howell Coffee, 505 Washington St, Boston
-    Render Coffee, 563 Columbus Ave, Boston
-    Neighborhood's Coffee & Crepes, 96 Peterborough St, Boston
-    Barrington Coffee Roasting Company, 303 Newbury St, Boston
-    Pavement Coffeehouse, 286 Newbury St, Boston
-    Pavement Coffeehouse, 1334 Boylston Street, Boston
-    Intelligentsia Watertown Coffeebar, 810 Mount Auburn St, Watertown
-    ```
-
-    </details>
-
-  - For JavaScript, I used the [`JSON.parse()` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) to return an array. I was able to easily pull the response code, list name, list author and list description from the JSON array.
-
-    ```js
-    const data = JSON.parse(body)
-    const code = `\nResponse code: ${data.meta.code}`
-    const listName = `\nList name: ${data.response.list.name}`
-    const listAuthor = `\nList author: ${data.response.list.user.firstName} ${data.response.list.user.lastName}`
-    const listDescription = `\nList description: ${data.response.list.description}`
-    console.log(code, listName, listAuthor, listDescription, `\nVenues:\n`)
-    ```
-
-  - It took me about a day to figure out how to iterate over the JSON array. My first iteration attempt threw an error:
-
-    ```js
-    const items = data.response.list.listItems.items
-    for (const item of items) {
-      let venueInfo = `${venue.name}, ${venue.location.address}, ${venue.location.city}`
-      console.log(`${venueInfo}`)
-    }
-    ```
-
-  - I was able to pull the list of 12 venue ids. This told me I was at least on the right track, because my list had 12 locations.
-
-    ```js
-    const items = data.response.list.listItems.items
-    for (const item of items) {
-      console.log(item.id)
-    }
-    ```
-
-  - I couldn't use the same strategy to get the venue names. The code below just returns "undefined" 12 times, but again, at least the number is correct.
-
-    ```js
-    const items = data.response.list.listItems.items
-    for (const item of items) {
-      console.log(item.name)
-    }
-    ```
-
-  - The solution was to go one level deeper in the JSON array. Each location actually has `venue` info nested below the top level `id`.
-
-    ```js
-    const items = data.response.list.listItems.items
-    for (const item of items) {
-      console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
-    }
-    ```
-
-  - I also wrote a `forEach` loop for comparison:
-
-    ```js
-    items.forEach(item => {
-      console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
-    })
-    ```
-
-  - JavaScript code in *foursquare-list.js*
-
-    ```js
-    const request = require('request')
-
-    request({
-      url: 'https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96',
-      method: 'GET',
-      qs: {
-        client_id: 'PASTE_CLIENT_ID_HERE',
-        client_secret: 'PASTE_CLIENT_SECRET_HERE',
-        v: '20180323'
-      }
-    },
-
-    function (err, res, body) {
-      if (err) {
-        console.error(err)
-      } else {
-        const data = JSON.parse(body)
-        const code = `\nResponse code: ${data.meta.code}`
-        const listName = `\nList name: ${data.response.list.name}`
-        const listAuthor = `\nList author: ${data.response.list.user.firstName} ${data.response.list.user.lastName}`
-        const listDescription = `\nList description: ${data.response.list.description}`
-        console.log(code, listName, listAuthor, listDescription, `\nVenues:\n`)
-        const items = data.response.list.listItems.items
-        for (const item of items) {
-          console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
-        }
-        items.forEach(item => {
-          console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
-        })
-      }
-    })
-
-    ```
-  - The iterator `i` can be used instead of `item`.
-  - The JavaScript is actually a server-side Node.js module. I will convert the server-side code to run client-side in the browser.
-  - Git commit at this point: Query Foursquare API with Python and JavaScript 2ba7a8d
-
-[(Back to TOC)](#table-of-contents)
-
-## Knockout
+## Knockout View Model
 
 Now that I have my API endpoints established, I need to structure the app with Knockout. I had already completed the [JavaScript Design Patterns](https://www.udacity.com/course/javascript-design-patterns--ud989) course, and worked through the [KnockoutJS tutorials](http://learn.knockoutjs.com).
 
-### View Model
-
-#### Starting off with app title
+### App title
 
 - I tried to build Knockout in around my Google Maps code, but it wasn't working. I started from scratch and began by adding the Knockout code structure.
 - Neither the documentation nor the Udacity lessons gave me a clear idea of how to structure the app.
@@ -357,7 +198,7 @@ Now that I have my API endpoints established, I need to structure the app with K
 
   - Success. The error in the browser console in the screenshot above is because of the Google Maps URL in *index.html*. Note that, after I build in the Foursquare API, I can pull the list title and change the title to a `ko.observable()`, so that it will update automatically when changed.
 
-#### Sidenav
+### Sidenav
 
 - I decided to build in the side navigation menu before incorporating Google Maps and Foursquare into the Knockout app.
 - I used the HTML unicode `&#9776;` for the hamburger icon in the header. Encoding the hamburger as a character instead of an icon or image allowed me to use the same style as the header title.
@@ -435,8 +276,9 @@ Now that I have my API endpoints established, I need to structure the app with K
 - Responsive design
   - The sidenav push also doesn't look great on mobile devices, because it crunches the main page into a tiny space. It would be helpful to include some media queries to turn the sidenav into a topnav on mobile devices. I'm not sure how to coordinate the media queries with JavaScript right now, so I will save it for later.
 - I decided to just move on, and leave the animation and responsive design for later. It was taking too much time and it's not essential to the app.
+- Git commit at this point: Add side navigation menu 2b44b1b
 
-#### Google Maps and Knockout
+### Google Maps with Knockout
 
 - My first objective was to figure out how to **nest the `<div id="map">` within `<main>` in the HTML.**
   - This is something that had been bugging me since I started using the Google Maps API. In yet another one of Google's oversights, the Google Maps JavaScript API docs don't explain how to nest the map div. I went back through the [overview](https://developers.google.com/maps/documentation/javascript/tutorial) and thought carefully about each step. The Map DOM Elements section says:
@@ -453,19 +295,446 @@ Now that I have my API endpoints established, I need to structure the app with K
 
   - Google clearly explains that `<div id="map"></div>` requires a CSS `height` style attribute. **Google doesn't explain that any `div` enclosing the map must also have its height set with CSS.** In the past, when I nested the map `div` within `main`, the map would disappear. When I set a height attribute for `main`, the map reappeared.
 - My next objective was to **integrate the map with Knockout.**
-  - I took the opportunity here to [provide a menu with multiple style options](https://developers.google.com/maps/documentation/javascript/examples/style-selector).
+  - I took the opportunity here to [provide a menu with multiple style options](https://developers.google.com/maps/documentation/javascript/examples/style-selector). It was basically a drop-in from the Google Maps docs.
   - I was having some difficulty getting the map to function properly when contained within the `const viewModel` object. In the browser console, the page was throwing the error `uncaught exception: InvalidValueError: initMap is not a function`. I think this was because the `&callback=initMap` in the Google Maps URL in *index.html* was no longer recognizing the JavaScript. I tried changing the callback to `&callback=viewModel.initMap`, but it was not successful.
   - I decided to keep the Google Maps JavaScript outside of the Knockout objects.
+- Git commit at this point: Nest map div in HTML and add map style selector 9200ee3
 
 Google Maps can be used to handle click events, but this project requires that click events be handled by Knockout.
 
-### Model
+## Asynchronous HTTP requests
+
+### Foursquare API queries
+
+- I already had a developer account set up from the [API lessons](https://github.com/br3ndonland/udacity-fsnd/blob/master/4-web-apps/apis/apis.md). I started by reviewing the notes and code from those lessons.
+- Creating my ["Boston's best beans" Foursquare list](https://foursquare.com/user/480979057/list/bostons-best-beans) and adding places to the list was quick and easy in the Android app. I also added photos and tips (short reviews).
+- You can query the API to [get details of a list](https://developer.foursquare.com/docs/api/lists/details)! What's up now, Google?
+- The list details query requires the `LIST_ID`. It's not necessarily present in the URL for the list itself. I found the `LIST_ID` (5af879722b9844322f1aba96) by using the [Foursquare API explorer](https://foursquare.com/developers/explore) to view my lists ([https://api.foursquare.com/v2/users/self/lists](https://api.foursquare.com/v2/users/self/lists)). The API explorer is a helpful tool that allows developers to browse and fold JSON.
+- Next, I worked on parsing the list JSON and getting terminal output with Python and JavaScript.
+- It was, naturally, easier with Python. The `json.loads()` method adds the JSON to the Python program as a dictionary (array). It was easy to step through the nested levels of the JSON dictionary and pull out the data I wanted. Iterating over the venues with a `for` loop took more time to figure out, but still made sense.
+
+- <details><summary><strong>Python code in foursquare-list.py</strong></summary>
+
+  [foursquare-list.py](static/foursquare/foursquare-list.py)
+
+  ```python
+  import json
+  import requests
+
+  url = 'https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96'
+
+  params = dict(client_id='client_id',
+                client_secret='client_secret',
+                v='20180528')
+  resp = requests.get(url=url, params=params)
+  data = json.loads(resp.text)
+
+  def foursquare_list():
+      # Display metadata
+      print('\nResponse code: {}'.format(data['meta']['code']),
+            '\nList name: {}'.format(data['response']['list']['name']),
+            '\nList author: {} {}'.format(data['response']['list']['user']['firstName'],
+                                          data['response']['list']['user']['lastName']),
+            '\nList description: {}'.format(data['response']['list']['description']),
+            '\nVenues:')
+      # Iterate over list to return info for each venue
+      items = data['response']['list']['listItems']['items']
+      for item in items:
+          print('{}, {}, {}'.format(item['venue']['name'], item['venue']['location']['address'],
+                                    item['venue']['location']['city']))
+      pass
+
+  # If this file is called as a standalone program:
+  if __name__ == '__main__':
+      # Display output in terminal
+      foursquare_list()
+
+  ```
+
+  </details>
+
+- <details><summary><strong>Terminal output from <em>foursquare-list.py</em></strong></summary>
+
+  ```text
+  Response code: 200
+  List name: Boston's best beans
+  List author: Brendon Smith
+  List description: This is a personally curated list of the finest specialty coffee shops in Boston.
+  Venues:
+  Gracenote Coffee, 108 Lincoln St, Boston
+  Curio Coffee, 441 Cambridge St, Cambridge
+  Thinking Cup, 85 Newbury St, Boston
+  Blue Bottle Coffee, 40 Bow St, Cambridge
+  Thinking Cup, 165 Tremont St, Boston
+  George Howell Coffee, 505 Washington St, Boston
+  Render Coffee, 563 Columbus Ave, Boston
+  Neighborhood's Coffee & Crepes, 96 Peterborough St, Boston
+  Barrington Coffee Roasting Company, 303 Newbury St, Boston
+  Pavement Coffeehouse, 286 Newbury St, Boston
+  Pavement Coffeehouse, 1334 Boylston Street, Boston
+  Intelligentsia Watertown Coffeebar, 810 Mount Auburn St, Watertown
+  ```
+
+  </details>
+
+- The JavaScript example in the [Foursquare getting started docs](https://developer.foursquare.com/docs/api/getting-started) uses the Node.js [Request](https://www.npmjs.com/package/request) module. To start building on the example from the Foursquare docs, I used the [`JSON.parse()` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) to return an array. I was able to easily pull the response code, list name, list author and list description from the JSON array.
+
+  ```js
+  const data = JSON.parse(body)
+  const code = `\nResponse code: ${data.meta.code}`
+  const listName = `\nList name: ${data.response.list.name}`
+  const listAuthor = `\nList author: ${data.response.list.user.firstName} ${data.response.list.user.lastName}`
+  const listDescription = `\nList description: ${data.response.list.description}`
+  console.log(code, listName, listAuthor, listDescription, `\nVenues:\n`)
+  ```
+
+- It took me about a day to figure out how to iterate over the JSON array. My first iteration attempt threw an error:
+
+  ```js
+  const items = data.response.list.listItems.items
+  for (const item of items) {
+    let venueInfo = `${venue.name}, ${venue.location.address}, ${venue.location.city}`
+    console.log(`${venueInfo}`)
+  }
+  ```
+
+- I was able to pull the list of 12 venue ids. This told me I was at least on the right track, because my list had 12 locations.
+
+  ```js
+  const items = data.response.list.listItems.items
+  for (const item of items) {
+    console.log(item.id)
+  }
+  ```
+
+- I couldn't use the same strategy to get the venue names. The code below just returns "undefined" 12 times, but again, at least the number is correct.
+
+  ```js
+  const items = data.response.list.listItems.items
+  for (const item of items) {
+    console.log(item.name)
+  }
+  ```
+
+- The solution was to go one level deeper in the JSON array. Each location actually has `venue` info nested below the top level `id`.
+
+  ```js
+  const items = data.response.list.listItems.items
+  for (const item of items) {
+    console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
+  }
+  ```
+
+- I also wrote a `forEach` loop for comparison:
+
+  ```js
+  items.forEach(item => {
+    console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
+  })
+  ```
+
+- <details><summary><strong>JavaScript code in foursquare-list-request.js</strong></summary>
+
+  ```js
+  const request = require('request')
+
+  request({
+    url: 'https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96',
+    method: 'GET',
+    qs: {
+      client_id: 'PASTE_CLIENT_ID_HERE',
+      client_secret: 'PASTE_CLIENT_SECRET_HERE',
+      v: '20180323'
+    }
+  },
+  (err, res, body) => {
+    if (err) {
+      console.error(err)
+    } else {
+      const data = JSON.parse(body)
+      const code = `\nResponse code: ${data.meta.code}`
+      const listName = `\nList name: ${data.response.list.name}`
+      const listAuthor = `\nList author: ${data.response.list.user.firstName} ${data.response.list.user.lastName}`
+      const listDescription = `\nList description: ${data.response.list.description}`
+      console.log(code, listName, listAuthor, listDescription, `\nVenues:\n`)
+      const items = data.response.list.listItems.items
+      for (const item of items) {
+        console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
+      }
+    }
+  })
+
+  ```
+
+  </details>
+
+- The iterator `i` can be used instead of `item`.
+- The JavaScript is actually a server-side Node.js module. I will convert the server-side code to run client-side in the browser.
+- Git commit at this point: Query Foursquare API with Python and JavaScript 2ba7a8d
+
+[(Back to TOC)](#table-of-contents)
+
+### Ajax method selection
+
+- My next objective was to use Knockout to pull in the Foursquare JSON array. This requires an asynchronous HTTP request (Ajax).
+- I started off reading about [Ajax on MDN](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX). It's still called "Asynchronous JavaScript+XML" even though we use JSON instead of XML. I also got a more humorous introduction in the article [How it feels to learn JavaScript in 2016 – Hacker Noon](https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f).
+- I explored different options for making Ajax requests.
+  - **jQuery**
+    - Most people use jQuery for Ajax requests (the famous [`$.ajax({})`](https://api.jquery.com/jQuery.ajax/)).
+    - In [cs50 web](https://cs50.github.io/web/lectures) during [lecture 05](https://video.cs50.net/web/2018/spring/lectures/5?t=1h10m26s), Brian mentioned that jQuery is not as useful anymore, because many of its functions can be accomplished with standard JavaScript like [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and `querySelectorAll`. It's also a large library, so it's better not to load jQuery if you don't have to.
+    - The [Syntax podcast episode 039: Is jQuery dead?](https://syntax.fm/show/039/is-jquery-dead) was also very helpful.
+    - I also saw Lea Verou's blog post [jQuery considered harmful](http://lea.verou.me/2015/04/jquery-considered-harmful/).
+    - I have gotten this far without jQuery, and I don't need it.
+    - **I decided not to use jQuery for Ajax.**
+  - **Request**: The JavaScript example in the [Foursquare getting started docs](https://developer.foursquare.com/docs/api/getting-started) uses the Node.js [Request](https://www.npmjs.com/package/request) module. I could include Request and use a package manager, but would prefer to use vanilla JS if possible.
+  - **[Axios](https://github.com/axios/axios)**: Also heard about Axios on episode 039 of the Syntax podcast. It can be accessed through a CDN, but I'm not sure I need it.
+  - **Fetch**: The [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) is an improvement over the [XMLHttpRequest API](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest).
+- **I decided to use the Fetch API.**
+
+### Learning Fetch
+
+- Formatting a request for Fetch is supposed to be really simple, but was far more difficult than I anticipated. It took me a few days of full-time struggles to learn, but I found some great resources and was happy I took the time to learn.
+- When editing JavaScript files referencing the Fetch API in vscode, I get the error `fetch is not defined`.
+  - This is because **vscode is running Node.js, and Node.js does not have ES6 modules yet. See [Node.js ES6 page](https://nodejs.org/en/docs/es6/) and [Node.js API docs](https://nodejs.org/api/esm.html).** I learned this from the [Syntax podcast episode 046](https://syntax.fm/show/046/what-s-new-in-javascript) just a few days ago. How timely!
+  - One option is to [require](https://nodejs.org/api/modules.html#modules_require) the package. Add the following code at the top of the JavaScript file:
+
+    ```js
+    const fetch = require('node-fetch')
+    ```
+  - Browsers do support ES6, so another option is to create a simple HTML file referencing the script, open the HTML in a browser, and then open the developer tools console.
+- My other Udacity Nanodegree program (Google Mobile Web Specialist) had a section on JavaScript Ajax requests from the [Asynchronous JavaScript Requests course](https://www.udacity.com/course/es6-javascript-improved--ud356). I worked through those materials, and shared the code in my [udacity-google-mws GitHub repo](https://github.com/br3ndonland/udacity-google-mws).
+- I checked out MDN. The MDN documentation for the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) is surprisingly poor at this time. I used the example under "Making fetch requests" on the [Using Fetch MDN page](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch), updating the code with arrow functions.
+
+  ```js
+  fetch('http://example.com/movies.json')
+  .then(r => r.json())
+  .then(data => console.log(data))
+  ```
+
+- I knew that `response` could be shortened to `r`, and `error` could be shortened to `e`, because of [Jake Archibald's Fetch post](https://jakearchibald.com/2015/thats-so-fetch/), and my previous work.
+- I added some basic HTML around the JS so I could open it in the browser.
+- The browser console showed an error:
+
+  ```text
+  Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://example.com/movies.json. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing).
+  ```
+
+- As we learned in the intro to APIs move planner app lesson, CORS is a server-side function that helps protect servers against malicious requests. CORS errors frequently result from lacking an API key. Again, from [Jake Archibald's Fetch post](https://jakearchibald.com/2015/thats-so-fetch/) I knew that it was possible to include `mode: 'no-cors'` in the fetch request, though this changes the response.
+- Rather than figure out what was going on with example.com, I switched to a helpful [sitepoint tutorial](https://www.sitepoint.com/introduction-to-the-fetch-api/) to make my first successful fetch request. The code retrieves the top five posts from the JavaScript subreddit on Reddit.
+
+  ```js
+  fetch('https://www.reddit.com/r/javascript/top/.json?limit=5')
+  .then(r => r.json())
+  .then(json => console.log(json))
+  ```
+
+- I refined the request to display the first post title:
+
+  ```js
+  fetch('https://www.reddit.com/r/javascript/top/.json?limit=5')
+  .then(r => r.json())
+  .then(json => console.log(`Post title: ${json.data.children[0].data.title}`))
+  ```
+
+- I then wanted to iterate over the request to return just the post titles. My first attempt wasn't successful:
+
+  ```js
+  fetch('https://www.reddit.com/r/javascript/top/.json?limit=5')
+  .then(r => r.json())
+  .then(json => console.log(json))
+  .then(titles => {
+    const posts = json.data.children
+    for (const post of posts) {
+      console.log(`${post.data.title}`)
+    }
+  })
+  ```
+
+### Async await
+
+- I struggled with the syntax of the `.then()` promises, because they're not really objects. How do I convert the promise results to objects so I can act on them?
+- **The solution is async/await!** Async/await was introduced in ES2017. So thankful that I'm learning JavaScript after these great features have been introduced! The [sitepoint tutorial](https://www.sitepoint.com/introduction-to-the-fetch-api/) includes instructions for async/await, so I was able to easily rewrite the query. I also checked out [Wes Bos' Async + Await talk on YouTube from DotJS](https://youtu.be/9YkUCxvaLEk), [Syntax podcast episode 028](https://syntax.fm/show/028/async-await), and the [Fun Fun Function async/await video](https://youtu.be/568g8hxJJp4).
+  - The function is marked as `async`. It can be written either as a standard function declaration or as an ES6 arrow function object:
+
+    ```js
+    async function fetchTopFive (subreddit) {} // Standard function declaration
+
+    const fetchTopFive = async (subreddit) => {} // ES6 arrow function
+    ```
+
+  - The asynchronous request promises, and the promise results, can be stored in objects and labeled with `await`. On the [Syntax podcast episode 028](https://syntax.fm/show/028/async-await), I learned that I could include both promises on one line, the "double `await`."
+
+    ```js
+    const json = await (await fetchResult).json()
+    ```
+
+  - Iterate over the posts with a `for...of` loop:
+
+    ```js
+    for (const post of json.data.children) {
+      console.log(`${post.data.title} | ${post.data.url}`)
+    }
+    ```
+
+  - Iterate over the posts using `.map()`:
+
+    ```js
+    const posts = json.data.children.map(post => {
+      console.log(`${post.data.title} | ${post.data.url}`)
+    })
+    ```
+
+  - Finally, handle errors with a `try...catch` block. It is also possible to define a separate error handling function, and pass the other functions in.
+
+- <details><summary><strong>Completed sitepoint tutorial code</strong></summary>
+
+  ```js
+  // Require modules to run file from Node.js outside of browser
+  const fetch = require('node-fetch')
+
+  const fetchTopFive = async (subreddit) => {
+    const URL = `https://www.reddit.com/r/${subreddit}/top/.json?limit=5`
+    try {
+      // Fetch data from URL
+      const fetchResult = fetch(URL)
+      // Store promises and their results as objects
+      const json = await (await fetchResult).json()
+      // Create a console group to nest results
+      console.group('Posts')
+      // Print each post to the console with a for...of loop
+      console.group('for...of loop')
+      for (const post of json.data.children) {
+        console.log(`${post.data.title} | ${post.data.url}`)
+      }
+      console.groupEnd('for...of loop')
+      // Print each post to the console with map
+      console.group('map')
+      const posts = json.data.children.map(post => {
+        console.log(`${post.data.title} | ${post.data.url}`)
+      })
+      console.groupEnd('map')
+      console.groupEnd('Posts')
+    } catch (e) {
+      throw Error(e)
+    }
+  }
+  // Run the function on a specified subreddit
+  fetchTopFive('javascript')
+
+  ```
+
+  </details>
+- After learning about async/await, I refactored the code from the [Udacity Google Mobile Web Specialist Nanodegree program](https://github.com/br3ndonland/udacity-google-mws) Fetch lesson.
+- <details><summary><strong>JavaScript refactored with async/await in ajax-3-fetch-app-node.js</strong></summary>
+
+  ```js
+  // Require modules to run file from Node.js outside of browser
+  const fetch = require('node-fetch')
+
+  const fetchUnsplashNYT = async (query) => {
+    // Fetch data from Unsplash API
+    try {
+      const fetchResult = fetch(`https://api.unsplash.com/search/photos?page=1&query=${query}`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Client-ID paste_access_key_here'
+        }
+      })
+      const json = await (await fetchResult).json()
+      console.group('Unsplash')
+      console.log(`Results returned: ${json.results.length}\nInfo for first three images:`)
+      const imageData = json.results.slice(0, 3).map(image => {
+        console.log(`Image info:`,
+          `\nID: ${image.id}`,
+          `\nDescription: ${image.description}`,
+          `\nUser: ${image.user.username}`,
+          `\nURL: ${image.urls.regular}`
+        )
+      })
+      console.groupEnd('Unsplash')
+    } catch (e) {
+      throw Error(e)
+    }
+    // Fetch data from NYT API
+    try {
+      const fetchResult = fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${query}&api-key=paste_api_key`)
+      const json = await (await fetchResult).json()
+      console.group('The New York Times')
+      const articles = json.response.docs.map(article => {
+        console.log(`${article.web_url}\n${article.headline.main}\n${article.snippet}`)
+      })
+      console.groupEnd('The New York Times')
+    } catch (e) {
+      throw Error(e)
+    }
+  }
+  fetchUnsplashNYT('android')
+
+  ```
+
+  </details>
+
+### Foursquare with Fetch and async await
+
+- Now, I'm finally ready to convert the Foursquare code to use the Fetch API.
+- I started off creating a standalone node query with thorough console logging. It didn't take me long with my new skills! The most difficult part was constructing the URL. Foursquare didn't seem to be accepting the Fetch-style constructors, so I just stored each credential in a separate object.
+- <details><summary><strong>Foursquare query with fetch and async/await in foursquare-list-fetch.js</strong></summary>
+
+  ```js
+  // Require modules to run file from Node.js outside of browser
+  const fetch = require('node-fetch')
+
+  const fetchFoursquare = async () => {
+    try {
+      const clientId = 'clientId'
+      const clientSecret = 'clientSecret'
+      const v = '20180528'
+      const fetchResult = fetch(`https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96?&client_id=${clientId}&client_secret=${clientSecret}&v=${v}`)
+      const data = await (await fetchResult).json()
+      console.group('Foursquare list')
+      console.group('Metadata')
+      console.log(`\nResponse code: ${data.meta.code}`,
+        `\nList name: ${data.response.list.name}`,
+        `\nList author: ${data.response.list.user.firstName} ${data.response.list.user.lastName}`,
+        `\nList description: ${data.response.list.description}`)
+      console.groupEnd('Metadata')
+      console.group('Venues')
+      const items = data.response.list.listItems.items.map(item => {
+        console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
+      })
+      console.groupEnd('Venues')
+      console.groupEnd('Foursquare list')
+    } catch (e) {
+      throw Error(e)
+    }
+  }
+
+  fetchFoursquare()
+
+  ```
+
+  </details>
+- Git commit at this point: Query Foursquare with Fetch and async await
+
+### Foursquare and Knockout
+
+- Now that I have my Foursquare list query set up nicely, it's time to build it into the Knockout code.
+
+## Build
+
+*TODO*: [Set up Babel](https://babeljs.io/docs/setup/) locally
+
+*TODO*: create json and use [babel-preset-env](https://babeljs.io/docs/plugins/preset-env)
+
+## TODO
+
+*TODO* confused about when to use objects vs functions, how to call functions
+
+*TODO* use .map?
 
 *TODO* model properties as [observables](http://knockoutjs.com/documentation/observables.html)
 
 *TODO* make JSON array an [observable array](http://knockoutjs.com/documentation/observableArrays.html)?
-
-*TODO* access foursquare data with ajax call?
 
 *TODO* error handling: modify google maps link in html, add function to viewModel
 

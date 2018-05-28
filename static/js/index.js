@@ -1,22 +1,21 @@
-// Model (JSON data input)
+// Model - JSON data input
 // ~~~~~~~~~~~~~~~~~~~~~~~
 const model = {
-  // toggleSidenav: false,
-  // locations: [
-  //   {
-  //     name: 'Back Bay',
-  //     coordinates: {lat: 42.3492897, lng: -71.0905478},
-  //     visible: true
-  //   }
-  // ]
+  // Fetch Foursquare JSON
+  // Set locations from Foursquare JSON
+  // Center map on markers
 }
 
-// View (Google Maps JavaScript API)
+// View - Google Maps JavaScript API
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // Initialize map
 var map
+
 // Create a new empty array for all the listing markers.
 const markers = []
+
+// Initialize map
 function initMap () {
   // Create map
   map = new google.maps.Map(document.getElementById('map'), {
@@ -33,6 +32,7 @@ function initMap () {
   styleSelector.addEventListener('change', function () {
     map.setOptions({styles: styles[styleSelector.value]})
   })
+  // TODO delete this and generate markers in viewModel
   const backBay = {lat: 42.3492897, lng: -71.0905478}
   const marker = new google.maps.Marker({
     position: backBay,
@@ -41,6 +41,8 @@ function initMap () {
     animation: google.maps.Animation.DROP
   })
 }
+
+// Specify map style options
 const styles = {
   default: null,
   silver: [
@@ -325,7 +327,7 @@ const styles = {
   ]
 }
 
-// ViewModel (Knockout controller)
+// ViewModel - Knockout controller
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const viewModel = {
   appTitle: "Boston's Best Beans",
@@ -342,6 +344,8 @@ const viewModel = {
       main.style.marginLeft = '250px'
     }
   }
+  // TODO Generate map markers from data in model
+
 }
 
 // viewModel.init()

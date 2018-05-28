@@ -59,7 +59,6 @@ footer {
 /* Main page body */
 #main {
   transition: 0.5s ease-in-out;
-  padding: 16px;
   height: 100%;
 }
 
