@@ -4,23 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title data-bind="text: appTitle"></title>
-  <link href="https://fonts.googleapis.com/css?family=Lobster%7CRaleway" rel="stylesheet">
+  <!-- <title data-bind="text: appTitle"></title> -->
   <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
   <!-- Navigation menu -->
-  <aside id="sidenav" class="sidenav">
+  <nav id="sidenav" class="main-navigation" role="navigation">
     <header>
-      <article>TODO list description</article>
-      <input type="text">
+      <!-- TODO: list description -->
+      <article data-bind="app.data.response.list.description"></article>
       <!-- TODO: open now -->
     </header>
-    <ul>
-    <!-- <ul data-bind="foreach: locations"> -->
-      <li><a href="#">Use Knockout to create list</a></li>
+    <ul data-bind="foreach: app.markers">
+      <li data-bind="text: title"></li>
     </ul>
-  </aside>
+  </nav>
   <!-- Map style selector -->
   <div id="style-selector-control"  class="map-control">
     <select id="style-selector" class="selector-control">
@@ -34,14 +32,14 @@
   <main id="main">
     <header class="header-title">
       <h1>
-        <span class="toggle" data-bind="click: toggleSidenav">&#9776;</span>
-        <span data-bind="text: appTitle"></span>
+        <span class="nav-toggle" data-bind="click: toggleSidenav">&#9776;</span>
+        <!-- <span data-bind="text: appTitle"></span> -->
       </h1>
     </header>
     <div id="map"></div>
   </main>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=app">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
   <script src="static/js/index.js"></script>
