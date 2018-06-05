@@ -6,7 +6,7 @@
 
 Udacity Full Stack Web Developer Nanodegree program
 
-[Project 5. JavaScript Knockout Neighborhood Map](https://github.com/br3ndonland/udacity-fsnd-p5-map)
+[Project 5. JavaScript Map](https://github.com/br3ndonland/udacity-fsnd-p5-map)
 
 Brendon Smith
 
@@ -38,7 +38,7 @@ br3ndonland
   - [One function](#one-function)
   - [Markers](#markers)
   - [Info Windows](#info-windows)
-  - [Venue list for sidenav](#venue-list-for-sidenav)
+  - [Venue list for nav menu](#venue-list-for-nav-menu)
 - [Build](#build)
 - [TODO](#todo)
 
@@ -49,6 +49,7 @@ br3ndonland
 - I created the typical directory structure, with static/ containing the css/, img/, and js/ directories for static website content.
 - I added info/ for the Udacity documentation and computational narrative.
 - In the top-level directory, I added the README.md, and index.html. I got the HTML started by using the `html:5` Emmet snippet in vscode (just save the file as HTML, and type html).
+- For the favicon, I temporarily wrote the coffee cup HTML unicode character `&#9749;` &#9749; as an `h2` in the webpage, took a 32x32 screenshot of it, and saved the screenshot to the img directory.
 
 ### Practice and coursework
 
@@ -56,6 +57,7 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
 
 #### JavaScript syntax
 
+- [x] [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
 - [x] I checked out the [Udacity Intro to JavaScript](https://www.udacity.com/course/intro-to-javascript--ud803) course, but skipped it, because it's not updated for ES6.
 - [x] [Udacity ES6 - JavaScript Improved](https://www.udacity.com/course/es6-javascript-improved--ud356) course
   - I took this course during the [Grow with Google scholarship program](https://github.com/br3ndonland/udacity-google). I reviewed my notes from the course and practiced the syntax.
@@ -89,17 +91,16 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
   - [x] KnockoutJS Single page applications
   - [x] KnockoutJS Creating custom bindings
   - [x] KnockoutJS Loading and saving data
-
-Knockout is basically an inferior predecessor to React. I didn't find the tutorials particularly helpful, and the code hasn't been updated for ES6. It would be preferable to use React or Vue.js.
-
-In order to debug in an isolated environment within vscode, I downloaded Knockout from npm, and required Fetch and Knockout at the top of the JavaScript file:
+- Knockout is basically an inferior predecessor to React. I didn't find the tutorials particularly helpful, and the code hasn't been updated for ES6. It would be preferable to use React or Vue.js.
+- I originally planned to access KnockoutJS via a [Cloudflare CDN](https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js), but it was too slow and the requests were frequently failing, so I included it by direct download instead.
+- In order to debug in an isolated environment within vscode, I installed Knockout from npm, and required Fetch and Knockout at the top of the JavaScript file:
 
   ```js
   const fetch = require('node-fetch')
   const ko = require('knockout')
   ```
 
-I then turned on [Quokka](http://quokkajs.com/) for live results.
+- I then turned on [Quokka](http://quokkajs.com/) for live results.
 
 [(Back to TOC)](#table-of-contents)
 
@@ -777,29 +778,52 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 - **The breakthrough came from the Syntax podcast!**
   - After my struggles on Friday 20180601, I listened to [Episode 043](https://syntax.fm/show/043/20-javascript-array-and-object-methods-to-make-you-a-better-developer) on JavaScript array methods. When discussing `.filter()`, `.map()`, and `.reduce()`, Wes Bos explained that these methods eliminate the need to "reach outside of their own function to get data." After listening to the podcast episode and thinking it over, I realized how I could move forward.
   - If I don't yet have the JavaScript skills to coordinate distinct functions and pass them all into each other, why not just make it one big function?
-  - After a good night's sleep and a morning walk to my favorite coffee shop to clear my head, I refactored *index.js* so the Foursquare query and Google Maps code were part of the same `async` function. It worked!
+  - After a good night's sleep and a morning walk to my favorite coffee shop to clear my head, I refactored *index.js* so the Foursquare query, Google Maps code, and Knockout View Model were part of the same `async` function. It worked!
 
 ### Markers
 
 - I was now able to use the Foursquare list to generate map markers.
 - The Google Maps documentation disappointed me here as usual. The [markers docs](https://developers.google.com/maps/documentation/javascript/markers) don't really explain how to create markers from a custom set of locations. I combined the instructions for a single location with my JavaScript syntax skills to make it happen.
 - It took me a few tries to get the coordinates correct. I originally created an array of lat/lng coordinates, but Google Maps wants it as an object in JSON format with lat and lng as properties. I used `.forEach()` to concisely create markers for each item in the Foursquare list.
+- When creating the map, I manually set the zoom to a level that I knew would fit the markers. After creating the markers, I added code to adjust the map bounds to fit the markers.
+  - The bounds must first be initialized based on the default state of the map:
+
+    ```js
+    const bounds = new google.maps.LatLngBounds()
+    ```
+
+  - Within the `markers` object that creates markers with `.forEach()`, extend the bounds object to the marker position:
+
+    ```js
+    bounds.extend(marker.position)
+    ```
+
+    - The marker position is obtained from the Foursquare data. The Google Maps JavaScript can also be used to get the location of the marker itself with `getPosition()`.
+  - Fit the map bounds to the bounds object:
+
+    ```js
+    map.fitBounds(bounds)
+    ```
+
+    - This can either be done inside the `markers` object or after. I decided to fit the map bounds after the markers object, so that the bounds are only fit one time, instead of after creation of each marker.
 
 ### Info Windows
 
 - I began by coding the infoWindow content as JSON-style marker attributes in the `.forEach()` loop in which I create the markers.
 - The venue photo URL is included in the JSON, but a size is also required. I encoded the URL with a template literal and placed it within the `src=""` of the HTML `<img>` tag.
+- I included the Foursquare logo for [attribution](https://developer.foursquare.com/docs/terms-of-use/attribution).
 - Foursquare provides a `url` for each venue's business website in the list JSON, but strangely does not provide the `canonicalUrl` for the venue on Foursquare. I figured out the `canonicalUrl` formula and set up a string replacement for the venue title. It has three steps:
     1. Translate uppercase characters to lowercase. This was easy: `.toLowerCase()`.
     2. Delete symbols, but not spaces. This was difficult. I read the [`string.replace()` MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace) and hacked around for an hour or two. I tried `.replace(/\W/g, '')` but this deletes symbols and spaces. Eventually, I found an [answer on Stack Overflow](https://stackoverflow.com/questions/6053541/regex-every-non-alphanumeric-character-except-white-space-or-colon#6053606): `.replace(/[^a-zA-Z\s]/g, '')`. I also chose to omit colons, because I don't want them in a URL. As the answer explains, `\d` is numeric class, `\s` is whitespace, `a-zA-Z` is all letters, and `^` negates all of those.
     3. Convert spaces to hyphens. This was easy: `.replace(/\s/g, '-')`.
 - I considered displaying my reviews ("tips") for each venue in the infoWindow as well. However, tips are attached to the venue, not to the list, so I would have to make a second Foursquare API call using the venue id to access my tips. I opted not to use my tips.
+- For the Google Maps place link, rather than making another API call, I just encoded the place's latitude and longitude directly into a URL linking out to Google Maps.
 - It was easy to initialize the infoWindow, but more difficult to set the content for each marker.
   - The [Google Maps docs](https://developers.google.com/maps/documentation/javascript/infowindows) were a bit opaque about how to do this:
     >The content of the `InfoWindow` may contain a string of text, a snippet of HTML, or a DOM element. To set the content, either specify it within the `InfoWindowOptions` or call `setContent()` on the `InfoWindow` explicitly.
   - I built out the HTML template for the infoWindow in a separate file, *infoWindow.html*, so I could easily format the HTML, using the marker attribute names from the `.forEach()` loop, like `${marker.photoUrl}`.
   - I tried setting the content within the infoWindow options (JSON attributes), but this really only works with one marker.
-  - I tried setting the content as its own object, as the example in the docs shows, but it was difficult to connect with each marker, because the marker variable was nested under the `.forEach` loop.
+  - I tried setting the content as its own object, as the example in the docs shows, but it was difficult to connect with each marker, because the marker variable was scoped under the `.forEach` function.
   - The solution was to set the infoWindow content for each marker within the infoWindow event listener, and then include marker creation and infoWindow instructions within the `.forEach()` object:
 
     ```js
@@ -810,28 +834,129 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
         title: `${item.venue.name}`,
         address: `${item.venue.location.formattedAddress[0]}<br>${item.venue.location.formattedAddress[1]}`,
         canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
         photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
         animation: google.maps.Animation.DROP
       })
       marker.addListener('click', () => {
+        marker.setAnimation(google.maps.Animation.BOUNCE)
+        setTimeout(() => marker.setAnimation(null), 1000)
         infoWindow.setContent(
           `<div id="infoWindowContent">
             <img src="${marker.photoUrl}" alt="Venue photo">
             <h2>${marker.title}</h2>
             <p>${marker.address}</p>
-            <a href="${marker.canonicalUrl}">View on Foursquare</a>
+            <a href="${marker.canonicalUrl}">View on Foursquare</a><br>
+            <a href="${marker.googleUrl}">View on Google Maps</a>
           </div>`)
         infoWindow.open(map, marker)
       })
+      bounds.extend(marker.position)
+    })
     ```
 
 - Here's how the app is looking now:
 
   ![Screen shot after completing infoWindow](img/Screen-shot-2018-06-04-at-11.02.10-AM.png)
 
-- Git commit at this point: Add markers and infoWindow
+- Git commit at this point: Add markers and infoWindow de732db
 
-### Venue list for sidenav
+### Venue list for nav menu
+
+- Now I have to add info to the nav menu.
+- List metadata
+  - The title and description were easy to work with, now that my viewModel is situated within the main function.
+- Location list
+  - This took me a day or two. I was struggling to access the marker array to populate the nav menu. It would have been easy to access the location info directly from the Foursquare list, but this wouldn't allow me to connect click events with the markers.
+  - At this point, I was creating an object and iterating over the items in the Foursquare list with `.forEach()`:
+
+    ```js
+    const markers = items.forEach(item => {
+      let marker = new google.maps.Marker({
+        map: map,
+        position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
+        title: `${item.venue.name}`,
+        address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
+        canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
+        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
+        animation: google.maps.Animation.DROP
+      })
+      marker.addListener('click', () => {
+        marker.setAnimation(google.maps.Animation.BOUNCE)
+        setTimeout(() => marker.setAnimation(null), 1000)
+        infoWindow.setContent(
+          `<div id="info-window-content">
+            <img src="${marker.photoUrl}" alt="Venue photo">
+            <h2>${marker.title}</h2>
+            <p>${marker.address}</p>
+            <p><a href="${marker.canonicalUrl}">View on Foursquare</a></p>
+            <p><a href="${marker.googleUrl}">View on Google Maps</a></p>
+            <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+              <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+            </a>
+          </div>`)
+        infoWindow.open(map, marker)
+      })
+      bounds.extend(marker.position)
+      map.fitBounds(bounds)
+    })
+    ```
+
+  - This code generates markers, but doesn't allow me to access them outside the `markers` object.
+  - I tried moving marker creation into the `viewModel` Knockout object, but this didn't help.
+  - The key was to initialize an empty marker array with `const markers = []`, then create the markers with `const createMarkers = items.forEach(item => {})`, pushing each marker to the array with `markers.push(marker)`. I hadn't included the empty array step before because it's syntactically messy, and seems unnecessary because I was still getting the markers to show up without it.
+
+    ```js
+    const markers = []
+    const createMarkers = items.forEach(item => {
+      let marker = new google.maps.Marker({
+        map: map,
+        position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
+        title: `${item.venue.name}`,
+        address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
+        city: `${item.venue.location.city}`,
+        canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
+        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
+        animation: google.maps.Animation.DROP
+      })
+      marker.addListener('click', () => {
+        marker.setAnimation(google.maps.Animation.BOUNCE)
+        setTimeout(() => marker.setAnimation(null), 1000)
+        infoWindow.setContent(
+          `<div id="info-window-content">
+            <header>
+              <img src="${marker.photoUrl}" alt="Venue photo">
+              <h2>${marker.title}</h2>
+            </header>
+            <div>${marker.address}</div>
+            <div><a href="${marker.canonicalUrl}">View on Foursquare</a></div>
+            <div><a href="${marker.googleUrl}">View on Google Maps</a></div>
+            <div>
+              <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+                <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+              </a>
+            </div>
+          </div>`)
+        infoWindow.open(map, marker)
+      })
+      bounds.extend(marker.position)
+      map.fitBounds(bounds)
+      markers.push(marker)
+    })
+
+    ```
+
+  - I was then able to access the `markers` array from within the `viewModel` object.
+  - Here's the app at this point, after creating the marker array and populating the location list. Looking good!
+
+    ![Screenshot of app after creating marker array and populating location list](img/Screen-shot-2018-06-05-at-2.56.07-PM.png)
+
+  - Git commit at this point: Create marker array and populate location list
+- Filter
+  - I was hoping to filter by open now, but Foursquare unfortunately does not provide hours of operation in the lists API. The [venues API provides venue hours](https://developer.foursquare.com/docs/api/venues/hours), but that would require a separate API call.
+  - I decided to just filter by city. I have Boston, Cambridge, and Watertown, so that's sort of useful I guess.
 
 ## Build
 
@@ -850,6 +975,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 - [ ] *TODO* use knockout to filter location list by open now
 - [ ] *TODO* use knockout to handle click events
   - [ ] Google Maps can be used to handle click events, but this project requires that click events be handled by Knockout.
-- [ ] *TODO*: display tips in infoWindow
+- [ ] ~~*TODO*: display tips in infoWindow~~
+  - Tips are not associated with the list and would require a separate API call.
 
 [(Back to TOC)](#table-of-contents)

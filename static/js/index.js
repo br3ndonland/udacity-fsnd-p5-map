@@ -1,4 +1,4 @@
-async function app () {
+async function initMap () {
   try {
     // Model - Fetch data from Foursquare list ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     const listUrl = 'https://api.foursquare.com/v2/lists/5af879722b9844322f1aba96'
@@ -10,7 +10,6 @@ async function app () {
     const fetchResult = fetch(`${listUrl}?&client_id=${params.client_id}&client_secret=${params.client_secret}&v=${params.v}`)
     const data = await (await fetchResult).json()
     const items = data.response.list.listItems.items
-    const listName = data.response.list.name
     // View - Google Map ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Initialize map
     const backBay = {lat: 42.3492897, lng: -71.0905478}
@@ -18,31 +17,46 @@ async function app () {
       center: backBay,
       zoom: 13
     })
-    // Initialize infoWindow
+    const bounds = new google.maps.LatLngBounds()
     const infoWindow = new google.maps.InfoWindow()
     // Create markers and set infoWindow content for each marker
-    const markers = items.forEach(item => {
+    const markers = []
+    const createMarkers = items.forEach(item => {
       let marker = new google.maps.Marker({
         map: map,
         position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
         title: `${item.venue.name}`,
-        address: `${item.venue.location.formattedAddress[0]}<br>${item.venue.location.formattedAddress[1]}`,
+        address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
+        city: `${item.venue.location.city}`,
         canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
         photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
         animation: google.maps.Animation.DROP
       })
       marker.addListener('click', () => {
+        marker.setAnimation(google.maps.Animation.BOUNCE)
+        setTimeout(() => marker.setAnimation(null), 1000)
         infoWindow.setContent(
-          `<div id="infoWindowContent">
-            <img src="${marker.photoUrl}" alt="Venue photo">
-            <h2>${marker.title}</h2>
-            <p>${marker.address}</p>
-            <a href="${marker.canonicalUrl}">View on Foursquare</a>
+          `<div id="info-window-content">
+            <header>
+              <img src="${marker.photoUrl}" alt="Venue photo">
+              <h2>${marker.title}</h2>
+            </header>
+            <div>${marker.address}</div>
+            <div><a href="${marker.canonicalUrl}">View on Foursquare</a></div>
+            <div><a href="${marker.googleUrl}">View on Google Maps</a></div>
+            <div>
+              <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+                <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+              </a>
+            </div>
           </div>`)
         infoWindow.open(map, marker)
       })
+      bounds.extend(marker.position)
+      map.fitBounds(bounds)
+      markers.push(marker)
     })
-    // TODO: Resize map to fit all markers
     // Specify map style options
     const styles = {
       default: null,
@@ -335,29 +349,29 @@ async function app () {
     styleSelector.addEventListener('change', () => {
       map.setOptions({styles: styles[styleSelector.value]})
     })
+    // View Model - Knockout controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    const toggle = {}
+    const viewModel = {
+      listName: `${data.response.list.name}`,
+      listDescription: `${data.response.list.description}`,
+      markers: markers,
+      // Navigation menu
+      toggleSidenav: function () {
+        const sidenav = document.getElementById('sidenav')
+        const main = document.getElementById('main')
+        if (toggle.toggleSidenav === true) {
+          toggle.toggleSidenav = false
+          sidenav.style.width = '0px'
+          main.style.marginLeft = '0px'
+        } else {
+          toggle.toggleSidenav = true
+          sidenav.style.width = '250px'
+          main.style.marginLeft = '250px'
+        }
+      }
+    }
+    ko.applyBindings(viewModel)
   } catch (e) {
     throw Error(e)
   }
 }
-// View Model - Knockout controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-const toggle = {}
-const viewModel = {
-  // Navigation menu
-  toggleSidenav: function () {
-    const sidenav = document.getElementById('sidenav')
-    const main = document.getElementById('main')
-    if (toggle.toggleSidenav === true) {
-      toggle.toggleSidenav = false
-      sidenav.style.width = '0px'
-      main.style.marginLeft = '0px'
-    } else {
-      toggle.toggleSidenav = true
-      sidenav.style.width = '250px'
-      main.style.marginLeft = '250px'
-    }
-  }
-  // Open infoWindow when item in menu is clicked
-  // marker.addListener('click', () => infoWindow.open(map, marker))
-}
-
-ko.applyBindings(viewModel)

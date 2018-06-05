@@ -27,26 +27,20 @@ footer {
   padding-top: 60px;
   transition: 0.5s ease-in-out;
 }
-.main-navigation header {
-  padding-left: 16px;
+.main-navigation p {
+  font-weight: bold;
+  padding: 20px;
 }
-.main-navigation ul a {
+.main-navigation li a {
   padding-left: 16px;
-  list-style-type: none;
-  text-decoration: none;
   color: #999079;
   display: block;
 }
-.main-navigation a:hover {
-  color: #f1f1f1;
+.main-navigation li:hover {
+  background-color: #f5f5f5
 }
-@media screen and (max-height: 450px) {
-  .main-navigation {
-    padding-top: 15px;
-    }
-  .main-navigation a {
-    font-size: 18px;
-    }
+.main-navigation img {
+  max-width: 90%;
 }
 
 /* Main page body */
@@ -71,4 +65,10 @@ footer {
   line-height: 30px;
   padding-left: 5px;
   padding-right: 5px;
+}
+#info-window-content {
+  text-align: center
+}
+#info-window-content img {
+  width: 75%
 }

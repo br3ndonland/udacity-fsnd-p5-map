@@ -4,20 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <!-- <title data-bind="text: appTitle"></title> -->
+  <title>Boston's best beans</title>
   <link rel="stylesheet" href="static/css/style.css">
+  <link rel="shortcut icon" href="static/img/favicon.png" type="favicon">
 </head>
 <body>
   <!-- Navigation menu -->
   <nav id="sidenav" class="main-navigation" role="navigation">
-    <header>
-      <!-- TODO: list description -->
-      <article data-bind="app.data.response.list.description"></article>
-      <!-- TODO: open now -->
-    </header>
-    <ul data-bind="foreach: app.markers">
-      <li data-bind="text: title"></li>
-    </ul>
+    <p data-bind="text: listDescription"></p>
+    <!-- List filter -->
+    <!-- <div><select name="filter" id="">Filter by city</select></div> -->
+    <!-- Location list -->
+    <ol data-bind="foreach: markers">
+      <a><li data-bind="text: title"></li></a>
+      <!-- , click: TODO open infoWindow -->
+    </ol>
+    <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+      <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+    </a>
   </nav>
   <!-- Map style selector -->
   <div id="style-selector-control"  class="map-control">
@@ -33,15 +37,13 @@
     <header class="header-title">
       <h1>
         <span class="nav-toggle" data-bind="click: toggleSidenav">&#9776;</span>
-        <!-- <span data-bind="text: appTitle"></span> -->
+        <span data-bind="text: listName"></span>
       </h1>
     </header>
     <div id="map"></div>
   </main>
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=app">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0qKqE3DXg_Iy9RjE4pFSCMrAAH03SKE&callback=initMap"></script>
+  <script src="static/js/knockout-3.4.2.js"></script>
   <script src="static/js/index.js"></script>
 </body>
 </html>
