@@ -66,4 +66,4 @@ Boston's finest coffee, brought to you by Foursquare and Google Maps.
     - Dashes for unordered lists.
     - The h1 first-level header is reserved for the title of the file and included on the first line, like `# Title`.
 
-[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
+[(Back to TOC)](#table-of-contents)
