@@ -87,7 +87,7 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
 
 - I then turned on [Quokka](http://quokkajs.com/) for live results.
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)
 
 ### Directory setup
 
@@ -220,7 +220,7 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
 - I decided to just move on, and leave the animation and responsive design for later. It was taking too much time and it's not essential to the app.
 - Git commit at this point: Add side navigation menu 2b44b1b
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)
 
 ## Google Maps
 
@@ -308,7 +308,7 @@ Notes:
 
 While I was struggling with this, Udacity actually removed the Google Maps requirement from the rubric (20180511). I considered switching to [OpenStreetMap](https://www.openstreetmap.org). **I decided to retain Google Maps for the map and markers, and pull data from the Foursquare API for the locations and info.**
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)
 
 ## Asynchronous HTTP requests
 
@@ -504,7 +504,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - Git commit at this point: Query Foursquare API with Python and JavaScript 2ba7a8d
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)
 
 ### Asynchronous HTTP request method selection
 
@@ -758,7 +758,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - Git commit at this point: Query Foursquare with Fetch and async await 50c15a2
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)
 
 ## Bringing it all together
 
@@ -1487,4 +1487,4 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 - I updated the [.gitignore](.gitignore) with the [GitHub Node .gitignore](https://github.com/github/gitignore/blob/master/Node.gitignore) to avoid committing Node modules.
 - [Webpack](https://webpack.js.org) bundles application dependencies into one file to reduce size. I'm not using npm or any separate modules for this application, so I don't need Webpack.
 
-[(Back to TOC)](#table-of-contents)
+[(Back to top)](#top)

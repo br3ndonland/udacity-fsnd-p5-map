@@ -60,7 +60,7 @@ You will learn how design patterns assist in developing a manageable codebase. Y
 
 ### How will I complete this project
 
->**Update May 11th, 2018: We are no longer requiring the use of Google Maps for this project. You have the option of using another mapping system instead of Google Maps.**
+**Update May 11th, 2018: We are no longer requiring the use of Google Maps for this project. You have the option of using another mapping system instead of Google Maps.**
 
 1. Review our course [JavaScript Design Patterns](https://www.udacity.com/course/javascript-design-patterns--ud989) and check out the [Neighborhood Map project rubric](https://review.udacity.com/#!/rubrics/17/view).
 2. Download the [Knockout framework](http://knockoutjs.com/). Knockout must be used to handle the list, filter, and any other information on the page that is subject to changing state. Things that should not be handled by Knockout: anything the Maps API is used for, creating markers, tracking click events on markers, making the map, refreshing the map. **Note 1**: Tracking click events on list items _should_ be handled with Knockout. **Note 2:** Creating your markers as a part of your ViewModel is allowed (and recommended). Creating them as Knockout observables is not.
@@ -381,4 +381,4 @@ Most people don't go to great lengths to hide their Google Maps API keys, especi
 
 Feel free to [read through this thread](https://discussions.udacity.com/t/hiding-google-api-key/170445/2?u=stacy), which discusses different things you could try for hiding an API key.
 
-[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
+[(Back to top)](#top)
