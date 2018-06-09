@@ -12,45 +12,45 @@ Brendon Smith
 
 br3ndonland
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-- [Table of Contents](#table-of-contents)
-- [Project Overview](#project-overview)
-  - [Why this Project](#why-this-project)
-  - [What will I Learn](#what-will-i-learn)
-  - [How does this help my Career](#how-does-this-help-my-career)
+- [Project overview](#project-overview)
+  - [Why this project](#why-this-project)
+  - [What will I learn](#what-will-i-learn)
+  - [How does this help my career](#how-does-this-help-my-career)
 - [Project details](#project-details)
   - [How will I complete this project](#how-will-i-complete-this-project)
   - [Example: BART Locations San Francisco](#example-bart-locations-san-francisco)
-  - [Helpful Resources](#helpful-resources)
+  - [Helpful resources](#helpful-resources)
 - [A note about plagiarism](#a-note-about-plagiarism)
 - [Project submission details](#project-submission-details)
-  - [Project Submission](#project-submission)
+  - [Project submission](#project-submission)
   - [Evaluation](#evaluation)
   - [Submission](#submission)
-  - [What's Next](#whats-next)
+  - [What's next](#whats-next)
 - [Project rubric](#project-rubric)
-  - [Interface Design](#interface-design)
-  - [App Functionality](#app-functionality)
-  - [App Architecture](#app-architecture)
-  - [Asynchronous Data Usage](#asynchronous-data-usage)
-  - [Location Details Functionality](#location-details-functionality)
+  - [Interface design](#interface-design)
+  - [App functionality](#app-functionality)
+  - [App architecture](#app-architecture)
+  - [Asynchronous data usage](#asynchronous-data-usage)
+  - [Location details functionality](#location-details-functionality)
   - [Documentation](#documentation)
-  - [Suggestions to Make Your Project Stand Out](#suggestions-to-make-your-project-stand-out)
+  - [Suggestions to make your project stand out](#suggestions-to-make-your-project-stand-out)
+- [Handling Google Maps in async and fallback](#handling-google-maps-in-async-and-fallback)
 
-## Project Overview
+## Project overview
 
 You will develop a single page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
 
-### Why this Project
+### Why this project
 
 The neighborhood map application is complex enough and incorporates a variety of data points that it can easily become unwieldy to manage. There are a number of frameworks, libraries and APIs available to make this process more manageable and many employers are looking for specific skills in using these packages.
 
-### What will I Learn
+### What will I learn
 
 You will learn how design patterns assist in developing a manageable codebase. You’ll then explore how frameworks can decrease the time required developing an application and provide a number of utilities for you to use. Finally, you’ll implement third-party APIs that provide valuable data sets that can improve the quality of your application.
 
-### How does this help my Career
+### How does this help my career
 
 - Interacting with API servers is the primary function of Front-End Web Developers
 - Use of third-party libraries and APIs is a standard and acceptable practice that is encouraged
@@ -93,7 +93,7 @@ The list of locations should be filterable with a text input or dropdown menu. F
 
 The web app should be mobile responsive - notice the hamburger menu icon used to hide the list on small screens (this is just one possible mobile implementation).
 
-### Helpful Resources
+### Helpful resources
 
 None of these are required, but they may be helpful.
 
@@ -130,7 +130,7 @@ These steps will help you better understand how to review others' submissions wi
 
 ## Project submission details
 
-### Project Submission
+### Project submission
 
 You will develop a single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. You will then add additional functionality to this application, including: map markers to identify popular locations or places you’d like to visit, a search function to easily discover these locations, and a listview to support simple browsing of all locations. You will then research and implement third-party APIs that provide additional information about each of these locations (such as StreetView images, Wikipedia articles, Yelp reviews, etc).
 
@@ -148,18 +148,18 @@ Your project will be evaluated by a Udacity reviewer according to the **[Neighbo
 6. When you're ready to submit your project go back to your [Udacity Home](https://www.udacity.com/me), click on Project 5.1, and we'll walk you through the rest of the submission process. Due to the high volume of submissions we receive, please allow up up to **7 business days** for your evaluation to be returned.
 7. If you are having any problems submitting your project or wish to check on the status of your submission, please email us at **frontend-project@udacity.com** or visit us in the [discussion forums](http://discussions.udacity.com).
 
-### What's Next
+### What's next
 
 You will get an email as soon as your reviewer has feedback for you. In the meantime, review your next project and feel free to get started on it or the courses supporting it!
 
 ## Project rubric
 
-### Interface Design
+### Interface design
 
 - Responsiveness: All application components render on-screen in a responsive manner.
 - Usability: All application components are usable across modern desktop, tablet, and phone browsers.
 
-### App Functionality
+### App functionality
 
 - Filter Locations:
   - Includes a text input field or dropdown menu that filters the map markers and list items to locations matching the text input or selection.
@@ -174,7 +174,7 @@ You will get an email as soon as your reviewer has feedback for you. In the mean
   - Markers should animate when clicked (e.g. bouncing, color change.)
   - Any additional custom functionality provided in the app functions error-free.
 
-### App Architecture
+### App architecture
 
 - Proper Use of `Knockout`
   - Code is properly separated based upon `Knockout` best practices
@@ -185,7 +185,7 @@ You will get an email as soon as your reviewer has feedback for you. In the mean
   - `Knockout` should not be used to handle the `Google Map API`.
 - There are at least 5 locations in the model. These may be hard-coded or retrieved from a data API.
 
-### Asynchronous Data Usage
+### Asynchronous data usage
 
 - Asynchronous API Requests
   - Application utilizes the `Google Maps API` and at least one non-Google third-party `API`. Refer to [this documentation](https://developers.google.com/maps/documentation/javascript/tutorial)
@@ -193,7 +193,7 @@ You will get an email as soon as your reviewer has feedback for you. In the mean
 - Error Handling
   - Data requests that fail are handled gracefully using common fallback techniques (i.e. `AJAX` error or fail methods). 'Gracefully' means the user isn’t left wondering why a component isn’t working. If an `API` doesn’t load there should be some visible indication on the page (an alert box is ok) that it didn’t load. _Note_: You do not need to handle cases where the user goes offline.
 
-### Location Details Functionality
+### Location details functionality
 
 - Additional Location Data
   - Functionality providing additional data about a location is provided and sourced from a 3rd party API. Information can be provided either in the marker’s `infoWindow`, or in an `HTML` element in the `DOM` (a sidebar, the list view, etc.)
@@ -213,7 +213,7 @@ You will get an email as soon as your reviewer has feedback for you. In the mean
   - Code is formatted with consistent, logical, and easy-to-read formatting as described in the [Udacity JavaScript Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html).
   - If build tools (such as Gulp or Grunt) are used, both source and production code are submitted in the same repository in separate directories. These directories are usually named `src` and `dist` respectively.
 
-### Suggestions to Make Your Project Stand Out
+### Suggestions to make your project stand out
 
 - Add unique functionality beyond the minimum requirements (i.e. the ability to “favorite” a location, etc.).
 - Incorporate a build process allowing for production quality, minified code, to be delivered to the client.
@@ -222,3 +222,163 @@ You will get an email as soon as your reviewer has feedback for you. In the mean
 - Style different markers in different (and functionally-useful) ways, depending on the data set.
 - Implement additional optimizations that improve the performance and user experience of the filter functionality (keyboard shortcuts, autocomplete functionality, filtering of multiple fields, etc).
 - Integrate all application components into a cohesive and enjoyable user experience.
+
+## Handling Google Maps in async and fallback
+
+**From [Udacity discussion forum post](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282). Forum post provided by Udacity on how to make asynchronous HTTP requests. The info is outdated and not particularly useful.**
+
+Hiya everyone,
+
+For all data APIs of the Neighborhood Map project, each must:
+
+- Load asynchronously (success callback)
+- Have their errors handled gracefully (error callback or timeout message)
+
+This includes Google Maps. There seems to be some confusion with the implementation, so I thought I'd try to clear things up. The explanation ended up kind of lengthy, so I thought I'd give it its own thread. :laughing:
+
+I admit I'm perfectly imperfect, so I'm definitely open to input and suggestions.
+
+**Note on Posting:** For any questions or suggestions on what I've written in this thread, please post! But if you have a problem with getting it to work with your project, _please make your own thread_ (preferably one that includes a link to your project on GitHub). It is better to make your own and get your problem its full attention. Also, in doing so, you will always get emails and/or notifications when someone replies.
+
+### Basic Tactics: The Two Routes <!-- omit in toc -->
+
+The most basic way to set up a script to load asynchronously is through the HTML itself. There are two ways you can do this. You can either use `async` or `defer`, and both of these options will work with your Google Maps script to make it load asynchronously.
+
+With `async`:
+
+```html
+<script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=googleSuccess" onerror="googleError()"></script>
+```
+
+With `defer`:
+
+```html
+<script defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=googleSuccess" onerror="googleError()"></script>
+```
+
+Where (for both)
+
+- `YOUR_API_KEY` is your API key.
+- `googleSuccess` is the name of the function you want called if the script loads successfully. The name is passed through with `callback` in the URL for the Google Maps script.
+- `googleError` is the name of the function you want called if the  script fails to load, making use of `onerror`. (This is your fallback function!)
+
+(Do replace the `googleSuccess` and `googleError` names with your own, as you see fit.)
+
+In either case, it is important that both callback functions and any other necessary parts are loaded _before_ the Google Maps script runs.
+
+Of the two, I think `defer` is better in this situation. Why? Because we are dealing with dependencies and you can start loading your file sooner, getting the most advantage of loading asynchronously. If you're using `async`, you pretty much are stuck with putting your Google Maps script as last, and if it's the last one, it's not all that different from not using any asynchronous loading at all, isn't it?
+
+#### Using Defer <!-- omit in toc -->
+
+What `defer` does is start to load the file asynchronously, but it won't actually run the script until _after_ the browser has finished parsing the HTML. In this way, you can set this up as your first script
+
+So let's say we have `example-script.js` that relies on the Google Maps script. Maybe we set it up to hold our successful and error-handling callbacks, too. We can set things up just like this:
+
+```html
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=googleSuccess" onerror="googleError()"></script>
+    <script src="./example-script.js"></script>
+</body>
+</html>
+```
+
+The browser would hit the Google Maps script and start to download it and then go to download `example-script.js`. Once both the Google Maps script is done _and_ the browser is done going through the HTML, the Google Maps script will run and trigger the appropriate callback function.
+
+##### Why Not Defer Them All <!-- omit in toc -->
+
+`defer` preserves the order of the scripts it is used on. So, if you did:
+
+```html
+<script defer "example1.js"></script>
+<script defer "example2.js"></script>
+<script defer "example3.js"></script>
+```
+
+It _should_ load them all asynchronously and then still execute them in the same order. This could make a page load really quickly, so why not just do that?
+
+Well, it turns out that [there is a bug in Internet Explorer browsers](https://github.com/h5bp/lazyweb-requests/issues/42) that makes `defer` not function properly or work reliably in multiples. Ouch. There seems to be some possible workarounds, so it may be doable with some effort.
+
+#### Using Async <!-- omit in toc -->
+
+If you still wanted to use `async`, you could. You would simply have to put the Google Maps script last.
+
+```html
+    <script src="./example-script.js"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=googleSuccess" onerror="googleError()"></script>
+</body>
+</html>
+```
+
+This ensures that all the necessary parts are loaded before it can run. If you put it in another position, you can't be sure when it'll run. I'd say `async` is usually better for situations where you aren't dealing with script dependencies like we are in this project, but you can still use it if you set it up in a way that will work out.
+
+#### Using Async and Defer Together <!-- omit in toc -->
+
+You've probably seen examples that use both `async` and `defer` at the same time, like so:
+
+```html
+    <script src="./example-script.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=googleSuccess" onerror="googleError()"></script>
+</body>
+</html>
+```
+
+Here, `async` is what happens in most browsers. In a browser that doesn't support `async`, it uses `defer`. So for the most part, it works the same as just `async` by itself.
+
+### Using jQuery <!-- omit in toc -->
+
+If you're using jQuery in your project, you can instead have jQuery load the script for you by using `$.getScript`. With that, you have `done` and `fail` options that give you the same kind of control you'll use for your other APIs and their fallbacks.
+
+You can [read the docs on `getScript` here](http://api.jquery.com/jQuery.getScript/). If you'd like to see it in action, [here's a Codepen](http://codepen.io/SittingFox/pen/BoREqP?editors=101).
+
+Since you still need the callback for the script, you could avoid the `done` call altogether. Just have the script's callback handle what happens if it works.
+
+### Checking Your Fallback Technique <!-- omit in toc -->
+
+Here are some ways you can check that your fallback handling is working:
+
+- Disconnect your computer from the internet and try to load the page.
+- Open up the page in Dev Tools, turn on the emulator, and under _Network_ choose the _Offline_ option. Then refresh.
+- Block the APIs with changes to your host file or by using some blocking software. If you want to try changing your host file, here are some instructions:
+  - [Windows](http://www.rackspace.com/knowledge_center/article/modify-your-hosts-file#Windows_Vista)
+  - [Mac](http://www.imore.com/how-edit-your-macs-hosts-file-and-why-you-would-want)
+  - [Linux](http://www.rackspace.com/knowledge_center/article/modify-your-hosts-file#Linux)
+- Make typos in the URL.
+
+Making a typo in the URL is my favorite, with using Dev Tools to fake disconnected internet to be my second choice. Both are easy and don't interfere with anything else on the computer. Use whatever option you prefer.
+
+Keep in mind that the options that involve having no internet (for real or not) will not allow scripts that aren't hosted locally to work. No internet means no downloading _at all_.
+
+### URL Modifications <!-- omit in toc -->
+
+You may need to make some adjustment to the URL you use, depending on what you're trying to do.
+
+#### Using Other Google Libraries <!-- omit in toc -->
+
+If you have libraries you need to load, like Places, you still just add on the callback with an ampersand (like `&callback=googleSuccess`). So you'd end up with something like this:
+
+```html
+<script defer src="http://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=googleSuccess" onerror="googleError()"></script>
+```
+
+#### Percent Encoding <!-- omit in toc -->
+
+To make things check out with the HTML Validator, replace the ampersand with the [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding) `%26`. So it becomes `%26callback=googleSuccess`.
+
+```html
+<script defer src="http://maps.googleapis.com/maps/api/js?libraries=places%26callback=googleSuccess" onerror="googleError()"></script>
+```
+
+### FAQ <!-- omit in toc -->
+
+#### Does the Google Maps script need an API key <!-- omit in toc -->
+
+Yes. You can get one [over here](https://developers.google.com/maps/documentation/javascript/get-api-key).
+
+#### How can I hide my API key <!-- omit in toc -->
+
+If you're putting your project on GitHub, you could simply not include the API key. If you would like to make use of GitHub Pages, you could make it take more effort by only including the API key on the branch for showing the site.
+
+Most people don't go to great lengths to hide their Google Maps API keys, especially for only a free version.
+
+Feel free to [read through this thread](https://discussions.udacity.com/t/hiding-google-api-key/170445/2?u=stacy), which discusses different things you could try for hiding an API key.
+
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)

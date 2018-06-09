@@ -10,18 +10,14 @@ Udacity Full Stack Web Developer Nanodegree program
 
 Brendon Smith
 
-br3ndonland
+[br3ndonland](https://github.com/br3ndonland)
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-- [Table of Contents](#table-of-contents)
-- [Prep](#prep)
-  - [Directory setup](#directory-setup)
+- [Setup](#setup)
   - [Practice and coursework](#practice-and-coursework)
-- [Knockout](#knockout)
-  - [Page layout](#page-layout)
-  - [App title](#app-title)
-  - [Nav menu](#nav-menu)
+  - [Directory setup](#directory-setup)
+  - [Page setup](#page-setup)
 - [Google Maps](#google-maps)
   - [Map setup](#map-setup)
   - [Map style](#map-style)
@@ -33,23 +29,13 @@ br3ndonland
   - [Async await](#async-await)
   - [Foursquare with Fetch and async await](#foursquare-with-fetch-and-async-await)
 - [Bringing it all together](#bringing-it-all-together)
-  - [Separate functions](#separate-functions)
-  - [Grouped functions](#grouped-functions)
-  - [One function](#one-function)
+  - [Variable scope](#variable-scope)
   - [Markers](#markers)
   - [Info Windows](#info-windows)
-  - [Venue list for nav menu](#venue-list-for-nav-menu)
-- [Build](#build)
-- [TODO](#todo)
+  - [Location list for nav menu](#location-list-for-nav-menu)
+- [Deployment](#deployment)
 
-## Prep
-
-### Directory setup
-
-- I created the typical directory structure, with static/ containing the css/, img/, and js/ directories for static website content.
-- I added info/ for the Udacity documentation and computational narrative.
-- In the top-level directory, I added the README.md, and index.html. I got the HTML started by using the `html:5` Emmet snippet in vscode (just save the file as HTML, and type html).
-- For the favicon, I temporarily wrote the coffee cup HTML unicode character `&#9749;` &#9749; as an `h2` in the webpage, took a 32x32 screenshot of it, and saved the screenshot to the img directory.
+## Setup
 
 ### Practice and coursework
 
@@ -70,9 +56,7 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
 
 - [x] General vscode JavaScript testing and debugging features
   - [x] Shift+Cmd+D, then enter, to run JS file
-  - [x] [Quokka.js](https://quokkajs.com):
-    - Select "Quokka.js: Start on Current File" and it will run the JS and show output inline.
-  - `console.log(varName)` is like `print()` in Python.
+  - [x] [Quokka.js](https://quokkajs.com): Select "Quokka.js: Start on Current File" and it will run the JS and show output inline. `console.log()` is like `print()` in Python.
 - [x] [vscode Node.js tutorial](https://code.visualstudio.com/docs/nodejs/nodejs-tutorial)
 - [x] [Firefox debugger playground](https://mozilladevelopers.github.io/playground/debugger/)
 - [x] [Wes Bos JavaScript30](https://javascript30.com/) lesson 9, "14 must-know dev tools tricks"
@@ -91,8 +75,9 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
   - [x] KnockoutJS Single page applications
   - [x] KnockoutJS Creating custom bindings
   - [x] KnockoutJS Loading and saving data
-- Knockout is basically an inferior predecessor to React. I didn't find the tutorials particularly helpful, and the code hasn't been updated for ES6. It would be preferable to use React or Vue.js.
-- I originally planned to access KnockoutJS via a [Cloudflare CDN](https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js), but it was too slow and the requests were frequently failing, so I included it by direct download instead.
+
+- I need to structure the app with Knockout. I had already completed the [JavaScript Design Patterns](https://www.udacity.com/course/javascript-design-patterns--ud989) course, and worked through the [KnockoutJS tutorials](http://learn.knockoutjs.com). Knockout is sort of like an inferior predecessor to React. I didn't enjoy working with it, but was required to for the project. I didn't find the tutorials particularly helpful, and the code hasn't been updated for ES6. I did find it interesting to look at the source code though, which appears to be written in a functional programming paradigm.
+- I originally planned to access KnockoutJS via a [CDN](https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js), but it was too slow and the requests were frequently failing, so I included it locally instead.
 - In order to debug in an isolated environment within vscode, I installed Knockout from npm, and required Fetch and Knockout at the top of the JavaScript file:
 
   ```js
@@ -102,23 +87,29 @@ The Full Stack Web Developer Nanodegree program (FSND) doesn't provide introduct
 
 - I then turned on [Quokka](http://quokkajs.com/) for live results.
 
-[(Back to TOC)](#table-of-contents)
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
 
-## Knockout
+### Directory setup
 
-I need to structure the app with Knockout. I had already completed the [JavaScript Design Patterns](https://www.udacity.com/course/javascript-design-patterns--ud989) course, and worked through the [KnockoutJS tutorials](http://learn.knockoutjs.com). Knockout is outdated and I didn't enjoy working with it.
+- I created the typical directory structure, with static/ containing the css/, img/, and js/ directories for static website content.
+- I added info/ for the Udacity documentation and computational narrative.
+- In the top-level directory, I added the README.md, and index.html. I got the HTML started by using the `html:5` Emmet snippet in vscode (just save the file as HTML, and type html).
+- For the favicon, I temporarily wrote the coffee cup HTML unicode character `&#9749;` &#9749; as an `h2` in the webpage, took a 32x32 screenshot of it, and saved the screenshot to the img directory.
 
-### Page layout
+### Page setup
 
-- This is a simple one-page web app. Based on the mockup in the project description, I should have a header bar at the top, and a sliding drawer menu on the side.
+#### Page layout
+
+- This is a simple one-page web app. Based on the mockup in the project description, I should have a header bar at the top, and a sliding drawer navigation menu on the side.
+
+  ![Project mockup](img/example03.png)
+
 - The header was simple: just add HTML `<header>` tags before the `<div id="map"></div>`
 
-### App title
+#### App title
 
 - I tried to build Knockout in around my Google Maps code, but it wasn't working. I started from scratch and began by adding the Knockout code structure.
 - Neither the documentation nor the Udacity lessons gave me a clear idea of how to structure the app.
-  - Why is `viewModel` a variable, and not a function?
-  - What should be included in `viewModel`, and what should be separate?
 - Let's start with the app title. I declared the title as a simple Knockout variable, and then set a binding in the HTML.
   - *index.js*
 
@@ -146,9 +137,9 @@ I need to structure the app with Knockout. I had already completed the [JavaScri
 
     ![Screen shot of Knockout title](img/Screen-shot-2018-05-18-at-3.00.25-PM.png)
 
-  - Success. The error in the browser console in the screenshot above is because of the Google Maps URL in *index.html*. Note that, after I build in the Foursquare API, I can pull the list title and change the title to a `ko.observable()`, so that it will update automatically when changed.
+  - Success. The error in the browser console in the screenshot above is because of the Google Maps URL in *index.html*. Note that, after I build in the Foursquare API, I can pull the list title from the JSON instead of hardcoding it.
 
-### Nav menu
+#### Nav menu
 
 - I decided to build in the side navigation menu before incorporating Google Maps and Foursquare into the Knockout app.
 - I used the HTML unicode `&#9776;` for the hamburger icon in the header. Encoding the hamburger as a character instead of an icon or image allowed me to use the same style as the header title.
@@ -216,7 +207,7 @@ I need to structure the app with Knockout. I had already completed the [JavaScri
 
 - Next, I worked on the CSS. I gave the sidenav the same background as the [Palenight Material Theme](https://github.com/equinusocio/vsc-material-theme/blob/master/src/themes/settings/specific/palenight.json), and set margins, padding and other properties.
 - Transition and animation
-  - I'm not totally happy with the transition. I would like the text in the sidenav to be static, and just have the main page pull back, instead of having the sidenav text roll in.
+  - I'm not totally happy with the transition. I would like the text in the sidenav to be static, and just have the main page pull back, instead of having the sidenav text roll in. Also, because the width is being changed, a scroll bar momentarily appears as the content is scrunched down.
   - Scott Tolinski from [Level Up Tutorials](https://www.leveluptutorials.com/) has some helpful [tutorials](https://youtu.be/ccqRk7Ehru4) using CSS transforms.
   - I looked into CSS animations, rather than transitions.
   - I read [Google's "Building performant expand & collapse animations" post](https://developers.google.com/web/updates/2017/03/performant-expand-and-collapse). I found out that Google does not recommend animating width and height because of slow performance.
@@ -228,6 +219,8 @@ I need to structure the app with Knockout. I had already completed the [JavaScri
   - The sidenav push also doesn't look great on mobile devices, because it crunches the main page into a tiny space. It would be helpful to include some media queries to turn the sidenav into a topnav on mobile devices. I'm not sure how to coordinate the media queries with JavaScript right now, so I will save it for later.
 - I decided to just move on, and leave the animation and responsive design for later. It was taking too much time and it's not essential to the app.
 - Git commit at this point: Add side navigation menu 2b44b1b
+
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
 
 ## Google Maps
 
@@ -274,7 +267,7 @@ I completed the [Udacity Google Maps APIs course](https://www.udacity.com/course
 
 ### Google Maps list fail
 
-Manually inputting a location array is inefficient and static. Rather than manually input an array, I decided to create a list in Google Maps and access the JSON from the list. This way, if the list is updated (if I add more coffee shops, for example), the app will automatically have the new information.
+Most previous students have hardcoded a location array directly into the JavaScript, which is inefficient and static. Rather than manually input an array, I decided to create a list in Google Maps and access the JSON from the list. This way, if the list is updated (if I add more coffee shops, for example), the app will automatically have the new information.
 
 Lists were [added to Google Maps about a year ago](https://blog.google/products/maps/keep-track-your-favorite-places-and-share-them-friends/).
 
@@ -313,9 +306,9 @@ Notes:
   - Information seems to be current
   - Has an API for lists
 
-While I was struggling with this, Udacity actually removed the Google Maps requirement from the rubric (May 11 2018). I considered switching to [OpenStreetMap](https://www.openstreetmap.org). **I decided to retain Google Maps for the map and markers, and pull data from the Foursquare API for the locations and info.**
+While I was struggling with this, Udacity actually removed the Google Maps requirement from the rubric (20180511). I considered switching to [OpenStreetMap](https://www.openstreetmap.org). **I decided to retain Google Maps for the map and markers, and pull data from the Foursquare API for the locations and info.**
 
-[(Back to TOC)](#table-of-contents)
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
 
 ## Asynchronous HTTP requests
 
@@ -323,17 +316,19 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - I already had a developer account set up from the [API lessons](https://github.com/br3ndonland/udacity-fsnd/blob/master/4-web-apps/apis/apis.md). I started by reviewing the notes and code from those lessons.
 - Creating my ["Boston's best beans" Foursquare list](https://foursquare.com/user/480979057/list/bostons-best-beans) and adding places to the list was quick and easy in the Android app. I also added photos and tips (short reviews).
-- You can query the API to [get details of a list](https://developer.foursquare.com/docs/api/lists/details)! What's up now, Google?
-- The list details query requires the `LIST_ID`. It's not necessarily present in the URL for the list itself. I found the `LIST_ID` (5af879722b9844322f1aba96) by using the [Foursquare API explorer](https://foursquare.com/developers/explore) to view my lists ([https://api.foursquare.com/v2/users/self/lists](https://api.foursquare.com/v2/users/self/lists)). The API explorer is a helpful tool that allows developers to browse and fold JSON.
+- **You can query the API to [get details of a list](https://developer.foursquare.com/docs/api/lists/details)! What's up now, Google?**
+- The list details query requires the `LIST_ID`. It's not necessarily present in the URL for the list itself. I found the `LIST_ID` (5af879722b9844322f1aba96) by using the [Foursquare API explorer](https://foursquare.com/developers/explore). The API explorer is a helpful tool that allows developers to browse and fold JSON.
 - Next, I worked on parsing the list JSON and getting terminal output with Python and JavaScript.
 
 #### Foursquare and Python
 
 - It was, naturally, easier with Python. The `json.loads()` method adds the JSON to the Python program as a dictionary (array). It was easy to step through the nested levels of the JSON dictionary and pull out the data I wanted. Iterating over the venues with a `for` loop took more time to figure out, but still made sense.
 
-- <details><summary><strong>Python code in foursquare-list.py</strong></summary>
+[Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode) snapshot ([vscode](https://code.visualstudio.com/), [material theme palenight](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme), [Dank Mono](https://dank.sh)):
 
-  [foursquare-list.py](static/foursquare/foursquare-list.py)
+![Polacode snapshot of Foursquare request in Python](img/code-foursquare-python.png)
+
+- <details><summary><strong>Python code in foursquare-list.py</strong></summary>
 
   ```python
   import json
@@ -447,6 +442,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
   }
   ```
 
+- The iterator `i` can be used instead of `item`.
 - I also wrote a `forEach` loop for comparison:
 
   ```js
@@ -489,7 +485,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
       const list = items.map(item => {
         console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
       })
-      // Alternative for...of iteration method
+      // Alternative for of iteration method
       // for (const item of items) {
       //   console.log(`${item.venue.name}, ${item.venue.location.address}, ${item.venue.location.city}`)
       // }
@@ -506,10 +502,9 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
   </details>
 
-- The iterator `i` can be used instead of `item`.
 - Git commit at this point: Query Foursquare API with Python and JavaScript 2ba7a8d
 
-[(Back to TOC)](#table-of-contents)
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
 
 ### Asynchronous HTTP request method selection
 
@@ -538,7 +533,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     ```js
     const fetch = require('node-fetch')
     ```
-  - Browsers do support ES6, so another option is to create a simple HTML file referencing the script, open the HTML in a browser, and then open the developer tools console.
+  - Browsers do support ES6, so another option is to create a simple HTML file referencing the script, open the HTML in a browser, and then open the developer tools console. The Firefox Developer Tools also include a [scratchpad](https://developer.mozilla.org/en-US/docs/Tools/Scratchpad) that can be used to run JavaScript code in an isolated console within the browser.
 - My other Udacity Nanodegree program (Google Mobile Web Specialist) had a section on JavaScript Ajax requests from the [Asynchronous JavaScript Requests course](https://www.udacity.com/course/asynchronous-javascript-requests--ud109). I worked through those materials, and shared the code in my [udacity-google-mws GitHub repo](https://github.com/br3ndonland/udacity-google-mws).
 - I checked out MDN. The MDN documentation for the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) is surprisingly poor at this time. I used the example under "Making fetch requests" on the [Using Fetch MDN page](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch), updating the code with arrow functions.
 
@@ -593,8 +588,8 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 ### Async await
 
-- I struggled with the syntax of the `.then()` promises, because they're not really objects. How do I convert the promise results to objects so I can act on them?
-- **The solution is async/await!** Async/await was introduced in ES2017. So thankful that I'm learning JavaScript after these great features have been introduced! The [sitepoint tutorial](https://www.sitepoint.com/introduction-to-the-fetch-api/) includes instructions for async/await, so I was able to easily rewrite the query. I also checked out [Syntax podcast episode 028](https://syntax.fm/show/028/async-await), [Wes Bos' Async + Await talk on YouTube from DotJS](https://youtu.be/9YkUCxvaLEk), and the [Fun Fun Function async/await video](https://youtu.be/568g8hxJJp4).
+- I struggled with the chaining and syntax of the `.then()` [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises), because they're not really objects. How do I convert the promise results to objects so I can act on them?
+- **The solution is async/await!** [Async/await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) was introduced in ES2017. So thankful that I'm learning JavaScript after these great features have been introduced! The [sitepoint tutorial](https://www.sitepoint.com/introduction-to-the-fetch-api/) includes instructions for async/await, so I was able to easily rewrite the query. I also checked out [Syntax podcast episode 028](https://syntax.fm/show/028/async-await), [Wes Bos' Async + Await talk on YouTube from DotJS](https://youtu.be/9YkUCxvaLEk), and the [Fun Fun Function async/await video](https://youtu.be/568g8hxJJp4).
   - The function is marked as `async`. It can be written either as a standard function declaration or as an ES6 arrow function object:
 
     ```js
@@ -609,7 +604,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     const json = await (await fetchResult).json()
     ```
 
-  - Iterate over the posts with a `for...of` loop:
+  - Iterate over the posts with a `for of` loop:
 
     ```js
     for (const post of json.data.children) {
@@ -625,7 +620,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     })
     ```
 
-  - Finally, handle errors with a `try...catch` block. It is also possible to define a separate error handling function, and pass the other functions in.
+  - Finally, handle errors with a try/catch block. It is also possible to define a separate error handling function, and pass the other functions in.
 
 - <details><summary><strong>Completed sitepoint tutorial code</strong></summary>
 
@@ -642,12 +637,12 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
       const json = await (await fetchResult).json()
       // Create a console group to nest results
       console.group('Posts')
-      // Print each post to the console with a for...of loop
-      console.group('for...of loop')
+      // Print each post to the console with a for of loop
+      console.group('for of loop')
       for (const post of json.data.children) {
         console.log(`${post.data.title}\n${post.data.url}`)
       }
-      console.groupEnd('for...of loop')
+      console.groupEnd('for of loop')
       // Print each post to the console with map
       console.group('map')
       const posts = json.data.children.map(post => {
@@ -720,6 +715,10 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - Now, I'm finally ready to convert the Foursquare code to use the Fetch API.
 - I started off creating a standalone node query with thorough console logging. It didn't take me long with my new skills! The most difficult part was constructing the URL. Foursquare didn't seem to be accepting the Fetch-style constructors, so I just stored each credential in a separate object.
+- [Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode) snapshot ([vscode](https://code.visualstudio.com/), [material theme palenight](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme), [Dank Mono](https://dank.sh)):
+
+  ![Polacode snapshot of Foursquare request with Fetch and async/await](img/code-foursquare-fetch.png)
+
 - <details><summary><strong>Foursquare query with fetch and async/await in foursquare-list-fetch.js</strong></summary>
 
   ```js
@@ -759,21 +758,26 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - Git commit at this point: Query Foursquare with Fetch and async await 50c15a2
 
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
+
 ## Bringing it all together
 
-### Separate functions
+### Variable scope
+
+#### Separate functions
 
 - I have written the different parts of the app (Foursquare, Google Maps, and Knockout), and now I need to bring them together.
-- At this point, I had Foursquare, Google Maps, and Knockout as three separate functions in *index.js*. The functions worked when I had them in separate files, but not when I brought them together. I was having trouble integrating them and moving data between the functions, for example, accessing data from the Foursquare function within the Google Maps function to generate markers.
+- At this point, I had Foursquare, Google Maps, and Knockout as three separate functions in *index.js*. Each function ran as a standalone file, but not when brought together with the other functions. I was having trouble integrating them and moving data between the functions, for example, accessing data from the Foursquare function within the Google Maps function to generate markers. I think this could broadly be described as [variable scope](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#Variable_scope).
 
-### Grouped functions
+#### Grouped functions
 
 - I decided to try making the `viewModel` a function declaration instead of a simple variable object, and to group the other functions under `viewModel`. I think `viewModel` could be considered a [higher-order function](https://eloquentjavascript.net/05_higher_order.html) (HOF) with this strategy. The Knockout docs usually show the `viewModel` as a simple variable object, but it seemed to make coding unnecessarily difficult.
 - I started with `let self = this`. I don't understand `this` very well right now, but my understanding was that I could declare objects like `self.object`.
 - I was able to easily embed the Google Maps code within the `viewModel` function by removing the `initMap` function, changing `var map` to `self.map` (so that map is a property of `viewModel`), and changing the callback in the HTML link from `initMap` to `viewModel`. A callback seems to only be required if there is more than one function in the JavaScript file. The function used to build the map must be declared as a `var` instead of a `const`. Google Maps is probably not updated for ES6.
-- This still didn't solve the problem. I was still not able to access data from one function from inside another function. I have the pieces of the app, but they're not fitting together. At this point, I was very frustrated and basically banging my head against the wall.
+- This still didn't solve the problem. I was still not able to access data from one function when inside another function, because the [variables are local to each function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#Variable_scope).
+- At this point, I was very frustrated and basically banging my head against the wall. I have the pieces of the app, but they're not fitting together.
 
-### One function
+#### One function
 
 - **The breakthrough came from the Syntax podcast!**
   - After my struggles on Friday 20180601, I listened to [Episode 043](https://syntax.fm/show/043/20-javascript-array-and-object-methods-to-make-you-a-better-developer) on JavaScript array methods. When discussing `.filter()`, `.map()`, and `.reduce()`, Wes Bos explained that these methods eliminate the need to "reach outside of their own function to get data." After listening to the podcast episode and thinking it over, I realized how I could move forward.
@@ -806,6 +810,27 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
     ```
 
     - This can either be done inside the `markers` object or after. I decided to fit the map bounds after the markers object, so that the bounds are only fit one time, instead of after creation of each marker.
+- I tried labeling the markers using the instructions in the [Google Maps docs](https://developers.google.com/maps/documentation/javascript/markers):
+  - First, initialize the label array and position. For demo purposes I just hardcoded the array:
+
+    ```js
+    const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    let labelIndex = 0
+    ```
+
+  - Next, set the `label` property when creating each marker with `.forEach()`:
+
+    ```js
+    const createMarkers = items.forEach(item => {
+      let marker = new google.maps.Marker({
+        map: map,
+        label: labels[labelIndex++ % labels.length],
+        // other object properties
+
+      })
+    }
+    ```
+  - I decided not to keep the marker labels. They appear before the markers do, and don't bounce with the markers.
 
 ### Info Windows
 
@@ -814,12 +839,12 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 - I included the Foursquare logo for [attribution](https://developer.foursquare.com/docs/terms-of-use/attribution).
 - Foursquare provides a `url` for each venue's business website in the list JSON, but strangely does not provide the `canonicalUrl` for the venue on Foursquare. I figured out the `canonicalUrl` formula and set up a string replacement for the venue title. It has three steps:
     1. Translate uppercase characters to lowercase. This was easy: `.toLowerCase()`.
-    2. Delete symbols, but not spaces. This was difficult. I read the [`string.replace()` MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace) and hacked around for an hour or two. I tried `.replace(/\W/g, '')` but this deletes symbols and spaces. Eventually, I found an [answer on Stack Overflow](https://stackoverflow.com/questions/6053541/regex-every-non-alphanumeric-character-except-white-space-or-colon#6053606): `.replace(/[^a-zA-Z\s]/g, '')`. I also chose to omit colons, because I don't want them in a URL. As the answer explains, `\d` is numeric class, `\s` is whitespace, `a-zA-Z` is all letters, and `^` negates all of those.
+    2. Delete symbols, but not spaces. This was difficult. I read the [`string.replace()` MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace) and hacked around for an hour or two. I tried `.replace(/\W/g, '')` but this deletes symbols and spaces. Eventually, I found an [answer on Stack Overflow](https://stackoverflow.com/questions/6053541/regex-every-non-alphanumeric-character-except-white-space-or-colon#6053606): `.replace(/[^a-zA-Z\s]/g, '')`. I also chose to omit colons, because I don't want them in a URL. As the answer explains, `\d` is numeric class, `\s` is whitespace, `a-zA-Z` is all letters, and `^` negates all of those, so it basically deletes anything other than a letter or space.
     3. Convert spaces to hyphens. This was easy: `.replace(/\s/g, '-')`.
-- I considered displaying my reviews ("tips") for each venue in the infoWindow as well. However, tips are attached to the venue, not to the list, so I would have to make a second Foursquare API call using the venue id to access my tips. I opted not to use my tips.
-- For the Google Maps place link, rather than making another API call, I just encoded the place's latitude and longitude directly into a URL linking out to Google Maps.
+- Reviews ("tips") are not attached to the list JSON by default, but will show up if tips are attached to the list from the Foursquare website. Foursquare also allows users to select a specific photo for each venue to feature on the list. Really nice features.
+- For the Google Maps place link, rather than making another API call, I just encoded the location's name and coordinates directly into a [Maps URL](https://developers.google.com/maps/documentation/urls/guide). I included `escape()` to percent-encode characters, instead of [`encodeURIComponent()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent), which does not remove single quotes. Foursquare has Neighborhoods coffee incorrectly listed as "Neighborhood's" so an escape was needed.
 - It was easy to initialize the infoWindow, but more difficult to set the content for each marker.
-  - The [Google Maps docs](https://developers.google.com/maps/documentation/javascript/infowindows) were a bit opaque about how to do this:
+  - The [Google Maps docs](https://developers.google.com/maps/documentation/javascript/infowindows) were a bit opaque about how to do this, as usual:
     >The content of the `InfoWindow` may contain a string of text, a snippet of HTML, or a DOM element. To set the content, either specify it within the `InfoWindowOptions` or call `setContent()` on the `InfoWindow` explicitly.
   - I built out the HTML template for the infoWindow in a separate file, *infoWindow.html*, so I could easily format the HTML, using the marker attribute names from the `.forEach()` loop, like `${marker.photoUrl}`.
   - I tried setting the content within the infoWindow options (JSON attributes), but this really only works with one marker.
@@ -834,8 +859,8 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
         title: `${item.venue.name}`,
         address: `${item.venue.location.formattedAddress[0]}<br>${item.venue.location.formattedAddress[1]}`,
         canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
-        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
-        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
+        googleUrl: `https://www.google.com/maps/search/?api=1&query=${escape(item.venue.name)}&query=${item.venue.location.lat},${item.venue.location.lng}`,
+        photoUrl: `${item.photo.prefix}250x150${item.photo.suffix}`,
         animation: google.maps.Animation.DROP
       })
       marker.addListener('click', () => {
@@ -852,6 +877,7 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
         infoWindow.open(map, marker)
       })
       bounds.extend(marker.position)
+      map.fitBounds(bounds)
     })
     ```
 
@@ -861,54 +887,115 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - Git commit at this point: Add markers and infoWindow de732db
 
-### Venue list for nav menu
+### Location list for nav menu
 
-- Now I have to add info to the nav menu.
-- List metadata
-  - The title and description were easy to work with, now that my viewModel is situated within the main function.
-- Location list
-  - This took me a day or two. I was struggling to access the marker array to populate the nav menu. It would have been easy to access the location info directly from the Foursquare list, but this wouldn't allow me to connect click events with the markers.
-  - At this point, I was creating an object and iterating over the items in the Foursquare list with `.forEach()`:
+- The title and description were easy to work with, now that my viewModel is situated within the main function. I pulled them directly from the Foursquare JSON. I switched to using a native font stack, after listening to the [Syntax podcast episode 015](https://syntax.fm/show/015/advice-for-new-developers-imposter-syndrome-and-interviewing-at-google) ("We all have enough Lobster in our lives," according to Wes Bos), and [Syntax podcast episode 038](https://syntax.fm/show/038/20-easy-win-performance-tips) (web fonts can slow performance).
 
-    ```js
-    const markers = items.forEach(item => {
-      let marker = new google.maps.Marker({
-        map: map,
-        position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
-        title: `${item.venue.name}`,
-        address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
-        canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
-        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
-        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
-        animation: google.maps.Animation.DROP
-      })
-      marker.addListener('click', () => {
-        marker.setAnimation(google.maps.Animation.BOUNCE)
-        setTimeout(() => marker.setAnimation(null), 1000)
-        infoWindow.setContent(
-          `<div id="info-window-content">
+#### Create location list from markers
+
+- This took me a day or two. I was struggling to access the marker array to populate the nav menu. It would have been easy to access the location info directly from the Foursquare list, but this wouldn't allow me to connect click events with the markers.
+- At this point, I was creating an object and iterating over the items in the Foursquare list with `.forEach()`:
+
+  ```js
+  const markers = items.forEach(item => {
+    let marker = new google.maps.Marker({
+      map: map,
+      position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
+      title: `${item.venue.name}`,
+      address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
+      canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+      googleUrl: `https://www.google.com/maps/search/?api=1&query=${escape(item.venue.name)}&query=${item.venue.location.lat},${item.venue.location.lng}`,
+      photoUrl: `${item.photo.prefix}250x150${item.photo.suffix}`,
+      animation: google.maps.Animation.DROP
+    })
+    marker.addListener('click', () => {
+      marker.setAnimation(google.maps.Animation.BOUNCE)
+      setTimeout(() => marker.setAnimation(null), 1000)
+      infoWindow.setContent(
+        `<div id="info-window-content">
+          <img src="${marker.photoUrl}" alt="Venue photo">
+          <h2>${marker.title}</h2>
+          <p>${marker.address}</p>
+          <p><a href="${marker.canonicalUrl}">View on Foursquare</a></p>
+          <p><a href="${marker.googleUrl}">View on Google Maps</a></p>
+          <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+            <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+          </a>
+        </div>`)
+      infoWindow.open(map, marker)
+    })
+    bounds.extend(marker.position)
+    map.fitBounds(bounds)
+  })
+  ```
+
+- This code generates markers, but doesn't allow me to access them outside the `markers` object.
+- I tried moving marker creation into the `viewModel` Knockout object, but this didn't help.
+- The key was to initialize an empty marker array with `const markers = []`, then after creating the markers with `const createMarkers = items.forEach(item => {})`, push each marker to the array with `markers.push(marker)`. I hadn't included the empty array step before because the markers were showing up without it.
+
+  ```js
+  const markers = []
+  const createMarkers = items.forEach(item => {
+    let marker = new google.maps.Marker({
+      map: map,
+      position: {lat: item.venue.location.lat, lng: item.venue.location.lng},
+      title: `${item.venue.name}`,
+      address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
+      city: `${item.venue.location.city}`,
+      canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
+      googleUrl: `https://www.google.com/maps/search/?api=1&query=${escape(item.venue.name)}&query=${item.venue.location.lat},${item.venue.location.lng}`,
+      photoUrl: `${item.photo.prefix}250x150${item.photo.suffix}`,
+      animation: google.maps.Animation.DROP
+    })
+    marker.addListener('click', () => {
+      marker.setAnimation(google.maps.Animation.BOUNCE)
+      setTimeout(() => marker.setAnimation(null), 1000)
+      infoWindow.setContent(
+        `<div id="info-window-content">
+          <header>
             <img src="${marker.photoUrl}" alt="Venue photo">
             <h2>${marker.title}</h2>
-            <p>${marker.address}</p>
-            <p><a href="${marker.canonicalUrl}">View on Foursquare</a></p>
-            <p><a href="${marker.googleUrl}">View on Google Maps</a></p>
+          </header>
+          <div>${marker.address}</div>
+          <div><a href="${marker.canonicalUrl}">View on Foursquare</a></div>
+          <div><a href="${marker.googleUrl}">View on Google Maps</a></div>
+          <div>
             <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
               <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
             </a>
-          </div>`)
-        infoWindow.open(map, marker)
-      })
-      bounds.extend(marker.position)
-      map.fitBounds(bounds)
+          </div>
+        </div>`)
+      infoWindow.open(map, marker)
     })
-    ```
+    bounds.extend(marker.position)
+    map.fitBounds(bounds)
+    markers.push(marker)
+  })
 
-  - This code generates markers, but doesn't allow me to access them outside the `markers` object.
-  - I tried moving marker creation into the `viewModel` Knockout object, but this didn't help.
-  - The key was to initialize an empty marker array with `const markers = []`, then create the markers with `const createMarkers = items.forEach(item => {})`, pushing each marker to the array with `markers.push(marker)`. I hadn't included the empty array step before because it's syntactically messy, and seems unnecessary because I was still getting the markers to show up without it.
+  ```
+
+- I was then able to access the `markers` array from within the `viewModel` object.
+- Here's the app at this point, after creating the marker array and populating the location list. Looking good!
+
+  ![Screenshot of app after creating marker array and populating location list](img/Screen-shot-2018-06-05-at-2.56.07-PM.png)
+
+- Git commit at this point: Create marker array and populate location list be12ab2
+
+#### Handle location list events
+
+- Next, I need clicks on side nav menu items to trigger click events on the corresponding map markers.
+- Surprisingly, this wasn't too difficult. I basically set up a relay for a Google Maps click event.
+  - The Knockout `click` event listener is coded into the HTML:
+
+    ```html
+    <li data-bind="text: title, click: clickMarker"></li>
+    ```
+  - Clicking on a list item activates the `clickMarker()` function.
+  - The `clickMarker()` function is coded as an attribute of the `marker` object.
+  - The `clickMarker()` function triggers the click event handler, which opens the infoWindow.
+  - <details><summary>Here's an excerpt of the code in <em>index.js</em></summary>.
 
     ```js
-    const markers = []
     const createMarkers = items.forEach(item => {
       let marker = new google.maps.Marker({
         map: map,
@@ -917,9 +1004,11 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
         address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
         city: `${item.venue.location.city}`,
         canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
-        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
-        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
-        animation: google.maps.Animation.DROP
+        googleUrl: `https://www.google.com/maps/search/?api=1&query=${escape(item.venue.name)}&query=${item.venue.location.lat},${item.venue.location.lng}`,
+        photoUrl: `${item.photo.prefix}250x150${item.photo.suffix}`,
+        tip: `${item.tip.text}`,
+        animation: google.maps.Animation.DROP,
+        clickMarker: marker => google.maps.event.trigger(marker, 'click')
       })
       marker.addListener('click', () => {
         marker.setAnimation(google.maps.Animation.BOUNCE)
@@ -930,7 +1019,10 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
               <img src="${marker.photoUrl}" alt="Venue photo">
               <h2>${marker.title}</h2>
             </header>
-            <div>${marker.address}</div>
+            <div class="info-window-text">
+              <p>${marker.address}</p>
+              <p>${marker.tip}</p>
+            </div>
             <div><a href="${marker.canonicalUrl}">View on Foursquare</a></div>
             <div><a href="${marker.googleUrl}">View on Google Maps</a></div>
             <div>
@@ -943,39 +1035,434 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
       })
       bounds.extend(marker.position)
       map.fitBounds(bounds)
-      markers.push(marker)
+      markersArray.push(marker)
+    })
+    ```
+
+    </details>
+
+#### Filter location list
+
+##### Create set of cities
+
+- I was hoping to filter based on venues open now, but Foursquare unfortunately does not provide hours of operation in the lists API. The [venues API provides venue hours](https://developer.foursquare.com/docs/api/venues/hours), but that would require a separate API call.
+- I decided to just filter by city. I have Boston, Cambridge, and Watertown, so that's useful enough.
+- Each marker had its own value for city, meaning that I had several entries for each city. I needed to group the city names. I grouped the cities by constructing a Set, as I learned in my [ES6 training](https://github.com/br3ndonland/udacity-google-mws). I also considered using `.reduce()`, as described in the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce), but it didn't seem as clean syntactically.
+- The set came out nicely:
+
+  ```js
+  const viewModel = {
+    listName: `${data.response.list.name}`,
+    listDescription: `${data.response.list.description}`,
+    markers: markers,
+    cities: new Set(markers.map(marker => marker.city)),
+    // other object properties
+
+  }
+  console.log(viewModel.cities)
+  ```
+
+  ```text
+  Set(3) [ "Boston", "Cambridge", "Watertown" ]
+  ```
+
+- `.forEach()` can be used to return each value in the array:
+
+  ```js
+  console.log(viewModel.cities.forEach(value => console.log(value)))
+  ```
+
+  ```text
+  Boston
+  Cambridge
+  Watertown
+  ```
+
+- The set can be generated, and the values returned, in one concise line of code:
+
+  ```js
+  const viewModel = {
+    listName: `${data.response.list.name}`,
+    listDescription: `${data.response.list.description}`,
+    markers: markers,
+    cities: new Set(markers.map(marker => marker.city)).forEach(value => console.log(value)),
+    // other object properties
+
+  }
+  ```
+
+##### Create dropdown menu
+
+- Alright, so how do I get this into a dropdown menu? The challenge was getting Knockout to work with the set, so that I could group the set items into a dropdown menu.
+- Knockout likes to work with arrays, so can we convert the set to an array? Stack Overflow had the [answer](https://stackoverflow.com/questions/20069828/how-to-convert-set-to-array#20070691): the `Array.from()` method. I checked out the linked [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from) and tried it out. It worked beautifully! I realized I could create the set inside the `Array.from()` method, so that I can keep the entire thing as one `cities` attribute in the `viewModel`.
+- I will also need an option to show all the locations. I accomplished this by calling `.unshift('All')` on the cities array, which uses the [`unshift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift) method to `push` the value 'All' to the zero index of the array. The [Knockout `optionsCaption`](http://knockoutjs.com/documentation/options-binding.html) can also be used to create a dummy default option in the dropdown, like `data-bind="options: cities, optionsCaption: 'Select a city'"`.
+
+  ```js
+  const viewModel = {
+    listName: `${data.response.list.name}`,
+    listDescription: `${data.response.list.description}`,
+    markers: markers,
+    cities: Array.from(new Set(markers.map(marker => marker.city))),
+    // other object properties
+
+  }
+  viewModel.cities.unshift('All')
+  ```
+
+- **Awesome!**
+
+  ![Screenshot of app with dropdown menu for cities](img/Screen-shot-2018-06-06-at-3.32.23-PM.png)
+
+- I was then able to use Knockout to bind the dropdown menu in *index.html* to the array.
+- I eliminated the need for the HTML `<options>` tag by using the [Knockout options binding](http://knockoutjs.com/documentation/options-binding.html).
+- I included Knockout event handling for both clicks and keyboard events. It's difficult to target the location list itself with the keyboard, but this is a minor concern.
+
+  ```html
+  <!-- Navigation menu -->
+  <nav id="sidenav" class="main-navigation" role="navigation">
+    <p data-bind="text: listDescription"></p>
+    <ul data-bind="foreach: markers">
+      <li data-bind="visible: visible, text: title, click: function toggleMarker (marker) { google.maps.event.trigger(marker, 'click') }"></li>
+    </ul>
+    <div id="list-filter-dropdown">
+      <div><strong>Filter list:</strong></div>
+      <select id="list-filter-dropdown" class="selector-control" data-bind="options: cities, click: toggleList, event: { key: 'Enter', keyup: toggleList }"></select>
+    </div>
+    <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
+      <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+    </a>
+  </nav>
+  ```
+
+##### Filter markers based on dropdown selection
+
+- Finally, I need to create a filter function to only show venues in the selected city by changing the `marker.visible` attribute.
+- I didn't need to include a separate step to filter the markers themselves, because a marker with `visible: false` is automatically hidden.
+- I included the [Knockout visible binding](http://knockoutjs.com/documentation/visible-binding.html) in the binding for each marker list item with `data-bind="visible: visible"`. I gave each marker a default property of `visible: true` when created.
+- It was difficult to figure out how to output and read the selection from the dropdown menu.
+  - I started with a simple function to test:
+
+    ```js
+    const viewModel = {
+      // other object properties,
+
+      filter: () => {
+        markers.forEach(marker => {
+          if (marker.visible === true) {
+            console.log(marker.title)
+          }
+        })
+      },
+      // other object properties
+
+    }
+    ```
+
+  - The console displayed each marker's title. Changing to `marker.visible: false` eliminates the markers and console log.
+  - Next, I modified the function to filter by city:
+
+    ```js
+    const viewModel = {
+      // other object properties,
+
+      filter: () => {
+        markers.forEach(marker => {
+          if (marker.city === 'Boston') {
+            console.log(marker.title)
+          }
+        })
+      },
+      // other object properties
+
+    }
+    ```
+
+  - This console logged only the coffee shops in Boston.
+  - Next, I toggled marker visibility instead of console logging:
+
+    ```js
+    const viewModel = {
+      // other object properties,
+
+      filter: () => {
+        markers.forEach(marker => {
+          if (marker.city === 'Boston') {
+            marker.visible = true
+          } else {
+            marker.visible = false
+          }
+        })
+      },
+      // other object properties
+
+    }
+    ```
+
+  - The map now showed only coffee shops in Boston. Note the different use of the strict equals `===` and simple object assignment with `=`. See the [MDN docs on JavaScript expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators) for more.
+  - I can see the dropdown selection in the browser console with
+
+    ```js
+    document.getElementById('list-filter-dropdown').value
+    ```
+
+  - If I select Cambridge, the console returns "Cambridge". This means I don't need to worry about setting `selected=selected` on the dropdown options, like I did for the map style selector.
+- I coded the `filter()` function to iterate over the markers, change `marker.visible` for each one, and then running `markers.filter(marker => marker.visible === true)` (the array method) to update the array to only include visible markers. The array didn't need to be a `ko.observableArray`, but I did need to include `markers: markers` to bring the markers array into the scope of the `filter ()` function.
+
+  ```js
+  const viewModel = {
+    listName: `${data.response.list.name}`,
+    listDescription: `${data.response.list.description}`,
+    markers: markers,
+    cities: ko.observableArray(Array.from(new Set(markers.map(marker => marker.city)))),
+    filter: () => {
+      let selection = document.getElementById('list-filter-dropdown').value
+      markers.forEach(marker => {
+        if (selection === 'All') {
+          marker.visible = true
+        } else {
+          if (selection === marker.city) {
+            marker.visible = true
+          } else {
+            marker.visible = false
+          }
+        }
+        markers.filter(marker => marker.visible === true)
+      })
+    },
+    // other object properties
+
+  }
+  ```
+
+- I now need to run the `filter()` function each time a dropdown selection event occurs. Surprisingly, [there's not really a standard `onselect` or `change` DOM event](https://stackoverflow.com/questions/647282/is-there-an-onselect-event-or-equivalent-for-html-select). I tried `data-bind="click: filter"` like I had used to toggle the sidenav. After spending an hour or two debugging and console logging, I found that I was properly reading the selection from the dropdown, but wasn't properly updating the visibility attribute on the markers. This is because the dropdown selection is not really considered a click event. I found that I needed to first make a dropdown selection, then click, to update the markers. To eliminate the need for another click, I just included `google.maps.event.trigger(marker, 'click')` inside the `filter()` function.
+- I re-coded the filter function as a separate Google Maps event listener.
+  - While searching the Google Maps docs for a way to avoid opening the infoWindow when the filter event runs, I came across the [setVisible()](https://developers.google.com/maps/documentation/javascript/reference/3/marker#Marker.setVisible) Marker method. It's much better. The marker visibility updates instantly when a dropdown selection is made, without requiring a separate click event.
+  - I also realized I could simply use the Google Maps event listener system to manage the marker filtering. It also catches selections entered by the keyboard. I created an event listener, and moved the code from the viewModel `filter()` function into the event listener, eliminating the need to trigger the function with Knockout bindings.
+  - The code below creates a nice event listener that reads the dropdown selection, whether it occurs by click or keyboard, and responds by filtering marker visibility. The console log step shows a dynamic array of visible markers that changes each time a dropdown selection is made. The marker filter code works either inside the `createMarkers` object, or when added separately after marker creation.
+
+    [Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode) snapshot ([vscode](https://code.visualstudio.com/), [material theme palenight](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme), [Dank Mono](https://dank.sh)):
+
+    ![Polacode snapshot](img/code-filter-markers.png)
+
+    ```js
+    // Filter markers by dropdown selection
+
+    const dropdown = document.getElementById('list-filter-dropdown')
+    const filter = dropdown.addEventListener('change', () => {
+      infoWindow.close()
+      let selection = dropdown.value
+      markers.forEach(marker => {
+        if (selection === 'All') {
+          marker.setVisible(true)
+        } else {
+          if (selection === marker.city) {
+            marker.setVisible(true)
+          } else {
+            marker.setVisible(false)
+          }
+        }
+      })
+      console.log(markers.filter(marker => marker.visible === true))
     })
 
     ```
 
-  - I was then able to access the `markers` array from within the `viewModel` object.
-  - Here's the app at this point, after creating the marker array and populating the location list. Looking good!
+- I ran into problems with [variable scope](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#Variable_scope), as I had [before](#variable-scope). I have this nice dynamic array of markers, and everything looks good on the map, but I can't get the list of locations in the sidebar to update in tandem.
+  - The problem seems to be that Knockout isn't reading any updates to the `markers` array after the markers are initially pushed in. I can see this if I set `marker.visible: false` inside of `createMarkers`, or if I set `viewModel.markers: ko.observableArray(markers.filter(marker => marker.visible === false))`. I need to somehow avoid having to redeclare the array, and I need to manipulate the array when I change visibility on the markers.
+  - I tried refactoring the `viewModel` object to be contained under the `initMap()` function, but then I couldn't access the objects in the HTML with Knockout, because they're scoped locally under the function. I could also refactor everything to be part of the `viewModel` object (again), but I don't think that will work.
+  - I tried adding `push` and `pop` when filtering the markers.
+  - I tried index and splice as recommended by [this Stack Overflow answer](https://stackoverflow.com/questions/5767325/how-do-i-remove-a-particular-element-from-an-array-in-javascript?rq=1), but this didn't work as expected, because it acts on just the first occurrence, and still didn't update the list.
 
-    ![Screenshot of app after creating marker array and populating location list](img/Screen-shot-2018-06-05-at-2.56.07-PM.png)
+    ```js
+    const dropdown = document.getElementById('list-filter-dropdown')
+    dropdown.addEventListener('change', () => {
+      let selection = dropdown.value
+      markersArray.forEach(marker => {
+        let index = markersArray.indexOf(marker)
+        if (selection === 'All') {
+          marker.setVisible(true)
+        } else {
+          if (selection === marker.city) {
+            marker.setVisible(true)
+          } else {
+            marker.setVisible(false)
+            if (index > -1) {
+              markersArray.splice(index, 1)
+            }
+          }
+        }
+      })
+      infoWindow.close()
+      map.fitBounds(bounds)
+      console.log(markersArray.filter(marker => marker.visible === true))
+    })
+    ```
 
-  - Git commit at this point: Create marker array and populate location list
-- Filter
-  - I was hoping to filter by open now, but Foursquare unfortunately does not provide hours of operation in the lists API. The [venues API provides venue hours](https://developer.foursquare.com/docs/api/venues/hours), but that would require a separate API call.
-  - I decided to just filter by city. I have Boston, Cambridge, and Watertown, so that's sort of useful I guess.
+- I decided to take a different approach: Rather than try to manipulate the array, which was too difficult, I just used Knockout to trigger the CSS `display: none;` class on list items I don't want to display. This was one of the first JavaScript things I ever did, with jQuery for the [portfolio website project](https://github.com/br3ndonland/udacity).
+  - I created a `.d-none` CSS class with `display: none` and modified my CSS a little until I could get the class applied to the list items.
+  - I first messed around with Knockout and CSS. Knockout has `css:` and `style` bindings. Applying `css: 'd-none'` to the list element successfully caused all the items to disappear.
 
-## Build
+    ```html
+    <li id="list-items" data-bind="text: title, click: clickMarker, css: 'd-none'"></li>
+    ```
 
-*TODO*: [Set up Babel](https://babeljs.io/docs/setup/) locally
+  - Now I need to toggle the class with JavaScript.
+    - Testing
+      - I added `click: toggleList` to the select element, and then built a `toggleList()` function within the `viewModel`. Again, it would be more effective to handle the dropdown event with Google Maps, because the 'click' event doesn't include enter keystrokes, and the 'change' event is not a standard event. I'm only using Knockout here because I'm required to for the project.
+      - When building the `toggleList()` function, I needed to match the data returned from the dropdown menu selection with data in the markers array. The dropdown menu contains city names, so I filtered the markers array by visibility and then mapped out just the city names. I then included a comparison between the dropdown selection and the marker city. The result is always a match when a dropdown selection is made, because the Google Maps code is setting visibility by city.
 
-*TODO*: create json and use [babel-preset-env](https://babeljs.io/docs/plugins/preset-env)
+        ```js
+        const viewModel = {
+          listName: `${data.response.list.name}`,
+          listDescription: `${data.response.list.description}`,
+          cities: ko.observableArray(Array.from(new Set(markersArray.map(marker => marker.city)))),
+          markersKo: markersArray,
+          toggleList: () => {
+            let selection = dropdown.value
+            let markers = markersArray.filter(marker => marker.visible === true).map(marker => marker.city)
+            markers.forEach(marker => {
+              if (selection === marker) {
+                console.log('Match!')
+              }
+            })
+          },
+        }
+        ```
+    - I need to move from dropdown to array to HTML, so I need to match data shared among them, like a table join in SQL.
+    - Dropdown -> array:
+      - Match by city.
+    - Array -> HTML:
+      - Match by title.
+      - `document.getElementById()` wasn't useful here, because all the list items are generated by knockout from the same `<li>` element. Instead, I used `document.querySelectorAll('li')` to get all the list elements.
+      - I followed the [MDN docs page on locating DOM elements using selectors](https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors) and learned the `li.textContent.includes()` syntax from [this Stack Overflow post](https://stackoverflow.com/a/42907920).
+      - I learned how to replace the class (without jQuery) from [this Stack Overflow post](https://stackoverflow.com/a/196038) and the [MDN classList page](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList). Awesome feature!
+      - **When I first got the list visibility to change, I cheered and jumped for joy! So pumped. This was a challenging problem to work through, and after running the code countless times and not seeing anything happen to the list, seeing the list change was very exciting.**
+      - Here's the code that first worked:
 
-## TODO
+        ```js
+        const viewModel = {
+          listName: `${data.response.list.name}`,
+          listDescription: `${data.response.list.description}`,
+          cities: ko.observableArray(Array.from(new Set(markersArray.map(marker => marker.city)))),
+          markersKo: markersArray,
+          toggleList: () => {
+            let selection = dropdown.value
+            let markers = markersArray.filter(marker => marker.city === selection).forEach(marker => {
+              let li = document.querySelectorAll('li').forEach(li => {
+                if (li.textContent.includes(marker.title)) {
+                  li.classList.remove('d-none')
+                  console.log(`This one was found: ${marker.title}`)
+                } else {
+                  li.classList.add('d-none')
+                }
+              })
+            })
+          },
+        // other object properties
 
-- [ ] *TODO*: how do I access data from one function inside another function?
-  - [ ] is that scoping?
-  - [ ] self and this?
-- [ ] *TODO* model properties as [observables](http://knockoutjs.com/documentation/observables.html)
-- [ ] *TODO* make JSON array an [observable array](http://knockoutjs.com/documentation/observableArrays.html)?
-- [ ] *TODO* error handling: modify google maps link in html, add function to viewModel
-- [ ] *TODO* use knockout to filter location list by open now
-- [ ] *TODO* use knockout to handle click events
-  - [ ] Google Maps can be used to handle click events, but this project requires that click events be handled by Knockout.
-- [ ] ~~*TODO*: display tips in infoWindow~~
-  - Tips are not associated with the list and would require a separate API call.
+        }
+        ```
 
-[(Back to TOC)](#table-of-contents)
+      - This wasn't quite right. For cities with >1 venue, I only seemed to be showing the last unique entries. It was a little challenging to think through the nested iteration. I basically have two different arrays, and I have to evaluate if any of the items in one array match any of the items in the other array.
+      - Here's a console log step showing the two arrays to compare:
+
+        ```js
+        const viewModel = {
+          listName: `${data.response.list.name}`,
+          listDescription: `${data.response.list.description}`,
+          cities: ko.observableArray(Array.from(new Set(markersArray.map(marker => marker.city)))),
+          markersKo: markersArray,
+          toggleList: () => {
+            let selection = dropdown.value
+            let markers = markersArray.filter(marker => marker.city === selection)
+            let li = document.querySelectorAll('li')
+            markers.forEach(marker => console.log(marker.title))
+            li.forEach(li => console.log(li.textContent))
+          },
+          // other object properties
+
+        }
+        ```
+
+      - Most of the Stack Overflow topics are outdated, like [this one](https://stackoverflow.com/questions/27030/comparing-arrays-of-objects-in-javascript).
+      - To tackle this, I implemented yet another new array method (from [ES2016](https://www.ecma-international.org/ecma-262/7.0/#sec-array.prototype.includes)), [`array.includes()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes). This was the final piece of code that I needed. After this, making a selection from the dropdown causes markers and side nav list to filter in tandem.
+        - [Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode) snapshot ([vscode](https://code.visualstudio.com/), [material theme palenight](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme), [Dank Mono](https://dank.sh)):
+
+          ![Polacode snapshot of list toggle function](img/code-toggle-list.png)
+
+        - <details><summary>toggleList() code</summary>
+
+          ```js
+          const viewModel = {
+            toggleList: () => {
+              let selection = dropdown.value
+              let markers = markersArray.filter(marker => marker.city === selection)
+              let li = document.querySelectorAll('li')
+              if (selection === 'All') {
+                li.forEach(li => {
+                  li.classList.remove('d-none')
+                })
+              } else {
+                li.forEach(li => {
+                  let markerTitles = markers.map(marker => marker.title)
+                  let liText = li.textContent
+                  if (markerTitles.includes(liText)) {
+                    li.classList.remove('d-none')
+                  } else {
+                    li.classList.add('d-none')
+                  }
+                })
+              }
+            },
+            // other object properties
+
+          }
+          ```
+
+        - <details><summary>toggleList() with console logging.</summary>
+
+          ```js
+          const viewModel = {
+            toggleList: () => {
+              let selection = dropdown.value
+              let markers = markersArray.filter(marker => marker.city === selection)
+              let li = document.querySelectorAll('li')
+              console.clear()
+              if (selection === 'All') {
+                li.forEach(li => {
+                  li.classList.remove('d-none')
+                  console.log(`This item will have d-none removed: ${li.textContent}.`)
+                })
+              } else {
+                li.forEach(li => {
+                  let markerTitles = markers.map(marker => marker.title)
+                  console.log(`Selection: ${markerTitles}`)
+                  let liText = li.textContent
+                  if (markerTitles.includes(liText)) {
+                    li.classList.remove('d-none')
+                    console.log(`Match in HTML list: ${liText}`)
+                  } else {
+                    li.classList.add('d-none')
+                    console.log(`HTML list items to be hidden: ${liText}`)
+                  }
+                })
+              }
+            },
+            // other object properties
+
+          }
+          ```
+
+          </details>
+
+**APPLICATION COMPLETE!**
+
+![Screenshot of completed application](img/Screen-shot-2018-06-08-at-6.03.18-PM.png)
+
+## Deployment
+
+- To wrap things up, I need to prepare the app for deployment.
+- [Babel](http://babeljs.io/) transpiles JavaScript for browsers that don't support the latest syntax.
+- [Webpack](https://webpack.js.org) bundles application dependencies into one file to reduce size. I'm not using npm or any separate modules for this application, so I don't need Webpack.
+
+[(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)

@@ -7,8 +7,8 @@ async function initMap () {
       client_secret: 'BJ5QE50VMWVRFEZBNQO3O4RBFJDPFCNZ0P13GUDERTAG054Y',
       v: '20180528'
     }
-    const fetchResult = fetch(`${listUrl}?&client_id=${params.client_id}&client_secret=${params.client_secret}&v=${params.v}`)
-    const data = await (await fetchResult).json()
+    const query = fetch(`${listUrl}?&client_id=${params.client_id}&client_secret=${params.client_secret}&v=${params.v}`)
+    const data = await (await query).json()
     const items = data.response.list.listItems.items
     // View - Google Map ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Initialize map
@@ -20,7 +20,7 @@ async function initMap () {
     const bounds = new google.maps.LatLngBounds()
     const infoWindow = new google.maps.InfoWindow()
     // Create markers and set infoWindow content for each marker
-    const markers = []
+    const markersArray = []
     const createMarkers = items.forEach(item => {
       let marker = new google.maps.Marker({
         map: map,
@@ -29,9 +29,11 @@ async function initMap () {
         address: `${item.venue.location.formattedAddress[0]}, ${item.venue.location.formattedAddress[1]}`,
         city: `${item.venue.location.city}`,
         canonicalUrl: `https://foursquare.com/v/${item.venue.name.toLowerCase().replace(/[^a-zA-Z\s]/g, '').replace(/\s/g, '-')}/${item.venue.id}`,
-        googleUrl: `https://www.google.com/maps/dir/?api=1&destination=${item.venue.location.lat},${item.venue.location.lng}`,
-        photoUrl: `${item.photo.prefix}200${item.photo.suffix}`,
-        animation: google.maps.Animation.DROP
+        googleUrl: `https://www.google.com/maps/search/?api=1&query=${escape(item.venue.name)}&query=${item.venue.location.lat},${item.venue.location.lng}`,
+        photoUrl: `${item.photo.prefix}250x150${item.photo.suffix}`,
+        tip: `${item.tip.text}`,
+        animation: google.maps.Animation.DROP,
+        clickMarker: marker => google.maps.event.trigger(marker, 'click')
       })
       marker.addListener('click', () => {
         marker.setAnimation(google.maps.Animation.BOUNCE)
@@ -42,7 +44,10 @@ async function initMap () {
               <img src="${marker.photoUrl}" alt="Venue photo">
               <h2>${marker.title}</h2>
             </header>
-            <div>${marker.address}</div>
+            <div class="info-window-text">
+              <p>${marker.address}</p>
+              <p>${marker.tip}</p>
+            </div>
             <div><a href="${marker.canonicalUrl}">View on Foursquare</a></div>
             <div><a href="${marker.googleUrl}">View on Google Maps</a></div>
             <div>
@@ -55,7 +60,26 @@ async function initMap () {
       })
       bounds.extend(marker.position)
       map.fitBounds(bounds)
-      markers.push(marker)
+      markersArray.push(marker)
+    })
+    // Filter markers by dropdown selection
+    const dropdown = document.getElementById('list-filter-dropdown')
+    dropdown.addEventListener('change', () => {
+      let selection = dropdown.value
+      markersArray.forEach(marker => {
+        if (selection === 'All') {
+          marker.setVisible(true)
+        } else {
+          if (selection === marker.city) {
+            marker.setVisible(true)
+          } else {
+            marker.setVisible(false)
+          }
+        }
+      })
+      infoWindow.close()
+      map.fitBounds(bounds)
+      // console.log(markersArray.filter(marker => marker.visible === true))
     })
     // Specify map style options
     const styles = {
@@ -346,17 +370,31 @@ async function initMap () {
     const styleSelector = document.getElementById('style-selector')
     map.setOptions({styles: styles[styleSelector.value]})
     // Apply new style array after user selection
-    styleSelector.addEventListener('change', () => {
-      map.setOptions({styles: styles[styleSelector.value]})
-    })
+    styleSelector.addEventListener('change', () => map.setOptions({styles: styles[styleSelector.value]}))
     // View Model - Knockout controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     const toggle = {}
     const viewModel = {
-      listName: `${data.response.list.name}`,
-      listDescription: `${data.response.list.description}`,
-      markers: markers,
-      // Navigation menu
-      toggleSidenav: function () {
+      toggleList: () => {
+        let selection = dropdown.value
+        let markers = markersArray.filter(marker => marker.city === selection)
+        let li = document.querySelectorAll('li')
+        if (selection === 'All') {
+          li.forEach(li => {
+            li.classList.remove('d-none')
+          })
+        } else {
+          li.forEach(li => {
+            let markerTitles = markers.map(marker => marker.title)
+            let liText = li.textContent
+            if (markerTitles.includes(liText)) {
+              li.classList.remove('d-none')
+            } else {
+              li.classList.add('d-none')
+            }
+          })
+        }
+      },
+      toggleSidenav: () => {
         const sidenav = document.getElementById('sidenav')
         const main = document.getElementById('main')
         if (toggle.toggleSidenav === true) {
@@ -365,11 +403,16 @@ async function initMap () {
           main.style.marginLeft = '0px'
         } else {
           toggle.toggleSidenav = true
-          sidenav.style.width = '250px'
-          main.style.marginLeft = '250px'
+          sidenav.style.width = '275px'
+          main.style.marginLeft = '275px'
         }
-      }
+      },
+      listName: `${data.response.list.name}`,
+      listDescription: `${data.response.list.description}`,
+      cities: ko.observableArray(Array.from(new Set(markersArray.map(marker => marker.city)))),
+      markersKo: markersArray
     }
+    viewModel.cities.unshift('All')
     ko.applyBindings(viewModel)
   } catch (e) {
     throw Error(e)

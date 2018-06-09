@@ -12,13 +12,15 @@
   <!-- Navigation menu -->
   <nav id="sidenav" class="main-navigation" role="navigation">
     <p data-bind="text: listDescription"></p>
-    <!-- List filter -->
-    <!-- <div><select name="filter" id="">Filter by city</select></div> -->
     <!-- Location list -->
-    <ol data-bind="foreach: markers">
-      <a><li data-bind="text: title"></li></a>
-      <!-- , click: TODO open infoWindow -->
-    </ol>
+    <ul data-bind="foreach: markersKo">
+      <li data-bind="text: title, click: clickMarker"></li>
+    </ul>
+    <!-- Dropdown menu -->
+    <div class="list-filter">
+      <div><strong>Filter by city:</strong></div>
+      <select id="list-filter-dropdown" class="selector-control" data-bind="options: cities, click: toggleList, event: { key: 'Enter', keyup: toggleList }"></select>
+    </div>
     <a href="https://foursquare.com/user/480979057/list/bostons-best-beans">
       <img src="static/img/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
     </a>
