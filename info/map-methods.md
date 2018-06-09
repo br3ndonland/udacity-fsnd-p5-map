@@ -1463,6 +1463,28 @@ While I was struggling with this, Udacity actually removed the Google Maps requi
 
 - To wrap things up, I need to prepare the app for deployment.
 - [Babel](http://babeljs.io/) transpiles JavaScript for browsers that don't support the latest syntax.
+  - I installed Babel in the directory with the Env preset:
+
+    ```shell
+    cd udacity-fsnd-p5-map
+    npm install babel-preset-env --save-dev
+    ```
+
+- I created a .babelrc and specified the Env preset, and targeted the last two versions of each browser.
+
+    ```json
+    {
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": ["last 2 versions"]
+          }
+        }]
+      ]
+    }
+    ```
+
+- I updated the [.gitignore](.gitignore) with the [GitHub Node .gitignore](https://github.com/github/gitignore/blob/master/Node.gitignore) to avoid committing Node modules.
 - [Webpack](https://webpack.js.org) bundles application dependencies into one file to reduce size. I'm not using npm or any separate modules for this application, so I don't need Webpack.
 
 [(Back to TOC)](#table-of-contents-<!---omit-in-toc--->)
