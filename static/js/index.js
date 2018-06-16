@@ -139,3 +139,4 @@ async function initMap () {
     throw Error(e)
   }
 }
+initMap()
